@@ -29,4 +29,6 @@ private:
 
 	UPROPERTY()
 	APawn* _commandModePawn;
+
+	void setMouseEnable(bool enable);
 };

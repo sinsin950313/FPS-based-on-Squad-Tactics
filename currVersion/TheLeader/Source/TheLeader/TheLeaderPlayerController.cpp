@@ -6,7 +6,6 @@
 
 ATheLeaderPlayerController::ATheLeaderPlayerController()
 {
-
 }
 
 void ATheLeaderPlayerController::BeginPlay()
@@ -15,6 +14,11 @@ void ATheLeaderPlayerController::BeginPlay()
 
 	_fpsModePawn = GetPawn();
 	_commandModePawn = Cast<ACommanderPawn>(GetWorld()->SpawnActor(ACommanderPawn::StaticClass()));
+}
+void ATheLeaderPlayerController::setMouseEnable(bool enable)
+{
+	bEnableMouseOverEvents = enable;
+	bShowMouseCursor = enable;
 }
 void ATheLeaderPlayerController::changePlayMode(PlayState currPlayState)
 {
@@ -28,12 +32,16 @@ void ATheLeaderPlayerController::changePlayMode(PlayState currPlayState)
 			FVector location = _fpsModePawn->GetActorLocation();
 			location.Z += 300;
 			rootComponent->SetWorldLocation(location);
+			setMouseEnable(true);
 			Possess(_commandModePawn);
 		}
 		break;
 	}
 	case PlayState::COMMODE:
+	{
+		setMouseEnable(false);
 		Possess(_fpsModePawn);
+	}
 		break;
 	default:
 		break;
