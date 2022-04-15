@@ -35,6 +35,7 @@ private:
 	void MoveRightSide(float val);
 	void Turn(float val);
 	void ToFPSMode();
+	void ToMove();
 
 	UCameraComponent* cameraComponent;
 };

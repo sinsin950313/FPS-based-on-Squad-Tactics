@@ -51,6 +51,8 @@ void ACommanderPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis(TEXT("Command Turn"), this, &ACommanderPawn::Turn);
 
 	PlayerInputComponent->BindAction(TEXT("ToFPS"), EInputEvent::IE_Pressed, this, &ACommanderPawn::ToFPSMode);
+
+	PlayerInputComponent->BindAction(TEXT("ToMove"), EInputEvent::IE_Pressed, this, &ACommanderPawn::ToMove);
 }
 
 void ACommanderPawn::MoveForward(float val)
@@ -97,5 +99,16 @@ void ACommanderPawn::ToFPSMode()
 	{
 		UE_LOG(LogTemp, Log, TEXT("To FPS Mode"));
 		currController->changePlayMode(PlayState::COMMODE);
+	}
+}
+
+void ACommanderPawn::ToMove()
+{
+	APlayerController* controller = Cast<APlayerController>(GetController());
+	if (controller != nullptr)
+	{
+		FHitResult hit;
+		controller->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel3, false, hit);
+		UE_LOG(LogTemp, Log, TEXT("%s"), *hit.Location.ToString());
 	}
 }
