@@ -32,6 +32,8 @@ AFPSPawn::AFPSPawn()
 	{
 		meshComponent->SetStaticMesh(mesh.Object);
 	}
+
+	_lastAttackTime = _coolTime;
 }
 
 // Called when the game starts or when spawned
@@ -50,16 +52,9 @@ void AFPSPawn::Tick(float DeltaTime)
 
 	if (_bAttackStart)
 	{
-		if (!_bFireAlready)
+		if (_coolTime <= _lastAttackTime)
 		{
 			Fire();
-		}
-		else
-		{
-			if (_coolTime <= _lastAttackTime)
-			{
-				Fire();
-			}
 		}
 	}
 }
@@ -125,7 +120,6 @@ void AFPSPawn::AttackStart()
 
 void AFPSPawn::AttackStop()
 {
-	_bFireAlready = false;
 	_bAttackStart = false;
 	UE_LOG(LogTemp, Log, TEXT("Attack Stop"));
 }
@@ -156,7 +150,6 @@ void AFPSPawn::Fire()
 {
 	GetWorld()->SpawnActor<AProjectileActor>(_cameraComponent->GetComponentLocation() + _cameraComponent->GetForwardVector() * 100, _cameraComponent->GetComponentRotation());
 	_lastAttackTime = 0;
-	_bFireAlready = true;
 }
 
 void AFPSPawn::SetState(EState state)

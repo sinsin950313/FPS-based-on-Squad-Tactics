@@ -41,7 +41,6 @@ private:
 	void ToCommandMode();
 	
 	bool _bAttackStart = false;
-	bool _bFireAlready = false;
 	float _lastAttackTime = 0.0f;
 	float _coolTime = 1.0f;
 	void Fire();

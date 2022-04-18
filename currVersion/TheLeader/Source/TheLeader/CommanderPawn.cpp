@@ -30,7 +30,7 @@ void ACommanderPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//_squadMembers.Add(GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - FVector(100, 0, 0), GetActorRotation()));
+	_squadMembers.Add(GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - FVector(100, 0, 0), GetActorRotation()));
 }
 
 // Called every frame
