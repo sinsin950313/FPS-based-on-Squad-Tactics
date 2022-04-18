@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Camera\CameraComponent.h"
+#include "FPSPawn.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/DefaultPawn.h"
@@ -37,5 +38,7 @@ private:
 	void ToFPSMode();
 	void ToMove();
 
-	UCameraComponent* cameraComponent;
+	UCameraComponent* _cameraComponent;
+
+	TArray<AFPSPawn*> _squadMembers;
 };

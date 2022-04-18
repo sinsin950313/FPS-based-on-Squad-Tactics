@@ -6,6 +6,7 @@
 #include "TheLeaderPlayerController.h"
 #include "TheLeaderCommonData.h"
 #include "GameFramework/PawnMovementComponent.h" 
+#include "Components/SphereComponent.h" 
 
 // Sets default values
 ACommanderPawn::ACommanderPawn()
@@ -13,21 +14,23 @@ ACommanderPawn::ACommanderPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	USceneComponent* sceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Scene Component"));
-	RootComponent = sceneComponent;
+	GetCollisionComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMeshComponent()->SetVisibility(false);
 
 	MovementComponent->SetUpdatedComponent(RootComponent);
 
-	cameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
-	cameraComponent->SetupAttachment(RootComponent);
-	cameraComponent->SetRelativeRotation(FRotator(-30.0f, 0.0f, 0.0f));
+	_cameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
+	_cameraComponent->SetupAttachment(RootComponent);
+	_cameraComponent->SetRelativeRotation(FRotator(-30.0f, 0.0f, 0.0f));
 }
 
 // Called when the game starts or when spawned
 void ACommanderPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//_squadMembers.Add(GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - FVector(100, 0, 0), GetActorRotation()));
 }
 
 // Called every frame
