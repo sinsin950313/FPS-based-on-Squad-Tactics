@@ -6,6 +6,7 @@
 #include "TheLeaderPlayerController.h"
 #include "TheLeaderCommonData.h"
 #include "FPSAIController.h"
+#include "ProjectileActor.h"
 
 // Sets default values
 AFPSPawn::AFPSPawn()
@@ -44,7 +45,23 @@ void AFPSPawn::BeginPlay()
 void AFPSPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	_lastAttackTime += DeltaTime;
 
+	if (_bAttackStart)
+	{
+		if (!_bFireAlready)
+		{
+			Fire();
+		}
+		else
+		{
+			if (_coolTime <= _lastAttackTime)
+			{
+				Fire();
+			}
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -108,6 +125,7 @@ void AFPSPawn::AttackStart()
 
 void AFPSPawn::AttackStop()
 {
+	_bFireAlready = false;
 	_bAttackStart = false;
 	UE_LOG(LogTemp, Log, TEXT("Attack Stop"));
 }
@@ -132,6 +150,13 @@ void AFPSPawn::ToCommandMode()
 		UE_LOG(LogTemp, Log, TEXT("To Command Mode"));
 		currController->changePlayMode(PlayState::FPSMODE);
 	}
+}
+
+void AFPSPawn::Fire()
+{
+	GetWorld()->SpawnActor<AProjectileActor>(_cameraComponent->GetComponentLocation() + _cameraComponent->GetForwardVector() * 100, _cameraComponent->GetComponentRotation());
+	_lastAttackTime = 0;
+	_bFireAlready = true;
 }
 
 void AFPSPawn::SetState(EState state)

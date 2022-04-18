@@ -10,9 +10,11 @@ AProjectileActor::AProjectileActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	UE_LOG(LogTemp, Log, TEXT("Projectile Created"));
+
 	USphereComponent* sphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Shpere Component"));
 	sphereComponent->SetCollisionProfileName(TEXT("Projectile"));
-	sphereComponent->SetGenerateOverlapEvents(true);
+	sphereComponent->SetNotifyRigidBodyCollision(true);
 	sphereComponent->SetSphereRadius(0.1f);
 	RootComponent = sphereComponent;
 
@@ -46,9 +48,9 @@ void AProjectileActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AProjectileActor::NotifyActorBeginOverlap(AActor* OtherActor)
+void AProjectileActor::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Log, TEXT("Overlap %s"), *OtherActor->GetClass()->GetName());
+	UE_LOG(LogTemp, Log, TEXT("Hit %s, %s"), *Hit.Actor->StaticClass()->GetName(), *Hit.Actor->GetActorLocation().ToString());
 	Destroy();
 }
 
