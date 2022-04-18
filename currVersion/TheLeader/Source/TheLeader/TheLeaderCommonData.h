@@ -4,20 +4,23 @@
 
 #include "CoreMinimal.h"
 
-enum class PlayState { FPSMODE, COMMODE };
-enum class BotFireState { FIREATWILL, HOLDFIRE };
+enum class EPlayerMode { FPSMODE, COMMODE };
 
 UENUM(BlueprintType)
-enum EBotSetupState
+enum EBotFireAttitude
+{
+	FIREATWILL UMETA(DisplayName = "FIREATWILL"),
+	HOLDFIRE UMETA(DisplayName = "HOLDFIRE")
+};
+
+UENUM(BlueprintType)
+enum EBotState
 {
 	WAIT UMETA(DisplayName = "WAIT"),
 	MOVE UMETA(DisplayName = "MOVE"),
-	FIRE UMETA(DisplayName = "FIRE"),
-	NONE UMETA(DisplayName = "NONE")
+	FIRE UMETA(DisplayName = "FIRE")
 };
-/**
- * 
- */
+
 class THELEADER_API TheLeaderCommonData
 {
 public:

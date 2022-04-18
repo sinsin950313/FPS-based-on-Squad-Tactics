@@ -18,7 +18,7 @@ class THELEADER_API ATheLeaderPlayerController : public APlayerController
 	
 public:
 	ATheLeaderPlayerController();
-	void changePlayMode(PlayState currPlayState);
+	void changePlayMode(EPlayerMode currPlayState);
 
 protected:
 	void BeginPlay() override;

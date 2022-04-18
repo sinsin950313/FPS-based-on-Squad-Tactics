@@ -142,7 +142,7 @@ void AFPSPawn::ToCommandMode()
 	if (currController != nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("To Command Mode"));
-		currController->changePlayMode(PlayState::FPSMODE);
+		currController->changePlayMode(EPlayerMode::FPSMODE);
 	}
 }
 

@@ -20,11 +20,11 @@ void ATheLeaderPlayerController::setMouseEnable(bool enable)
 	bEnableMouseOverEvents = enable;
 	bShowMouseCursor = enable;
 }
-void ATheLeaderPlayerController::changePlayMode(PlayState currPlayState)
+void ATheLeaderPlayerController::changePlayMode(EPlayerMode currPlayState)
 {
 	switch (currPlayState)
 	{
-	case PlayState::FPSMODE:
+	case EPlayerMode::FPSMODE:
 	{
 		USceneComponent* rootComponent = _commandModePawn->GetRootComponent();
 		if (rootComponent != nullptr)
@@ -37,7 +37,7 @@ void ATheLeaderPlayerController::changePlayMode(PlayState currPlayState)
 		}
 		break;
 	}
-	case PlayState::COMMODE:
+	case EPlayerMode::COMMODE:
 	{
 		setMouseEnable(false);
 		Possess(_fpsModePawn);

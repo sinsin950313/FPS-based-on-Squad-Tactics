@@ -101,7 +101,7 @@ void ACommanderPawn::ToFPSMode()
 	if (currController != nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("To FPS Mode"));
-		currController->changePlayMode(PlayState::COMMODE);
+		currController->changePlayMode(EPlayerMode::COMMODE);
 	}
 }
 

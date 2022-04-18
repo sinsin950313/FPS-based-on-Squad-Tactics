@@ -23,11 +23,15 @@ public:
 
 	virtual void OnPossess(APawn* InPawn) override;
 
-	EBotSetupState getSetupState();
-	void setSetupState(EBotSetupState setupState);
+	EBotFireAttitude getAttitude();
+	void setAttitude(EBotFireAttitude attitude);
+
+	EBotState getState();
+	void setState(EBotState setupState);
 
 	static const FName destination;
 	static const FName state;
+	static const FName fireAttitude;
 
 private:
 	UPROPERTY()
@@ -36,5 +40,6 @@ private:
 	UPROPERTY()
 	UBlackboardData* BBAsset;
 
-	EBotSetupState _currentSetupState;
+	EBotState _currentState;
+	EBotFireAttitude _currentAttitude;
 };

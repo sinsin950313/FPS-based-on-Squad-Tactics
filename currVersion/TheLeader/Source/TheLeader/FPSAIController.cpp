@@ -6,6 +6,7 @@
 
 const FName AFPSAIController::destination(TEXT("Destination"));
 const FName AFPSAIController::state(TEXT("State"));
+const FName AFPSAIController::fireAttitude(TEXT("FireAttitude"));
 
 AFPSAIController::AFPSAIController()
 {
@@ -36,12 +37,22 @@ void AFPSAIController::OnPossess(APawn* InPawn)
 	}
 }
 
-EBotSetupState AFPSAIController::getSetupState()
+EBotFireAttitude AFPSAIController::getAttitude()
 {
-	return _currentSetupState;
+	return _currentAttitude;
 }
 
-void AFPSAIController::setSetupState(EBotSetupState setupState)
+void AFPSAIController::setAttitude(EBotFireAttitude attitude)
 {
-	_currentSetupState = setupState;
+	_currentAttitude = attitude;
+}
+
+EBotState AFPSAIController::getState()
+{
+	return _currentState;
+}
+
+void AFPSAIController::setState(EBotState setupState)
+{
+	_currentState = setupState;
 }
