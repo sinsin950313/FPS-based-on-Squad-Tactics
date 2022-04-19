@@ -8,6 +8,8 @@
 #include "GameFramework/PawnMovementComponent.h" 
 #include "Components/SphereComponent.h" 
 
+const FName ACommanderPawn::FireAttitude(TEXT("FireAttitude"));
+
 // Sets default values
 ACommanderPawn::ACommanderPawn()
 {
@@ -30,7 +32,8 @@ void ACommanderPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_squadMembers.Add(GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - FVector(100, 0, 0), GetActorRotation()));
+	AFPSPawn* squadMember = GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - FVector(100, 0, 0), GetActorRotation());
+	_squadMembers.Add(Cast<AFPSAIController>(squadMember->GetController()));
 }
 
 // Called every frame
@@ -56,6 +59,49 @@ void ACommanderPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("ToFPS"), EInputEvent::IE_Pressed, this, &ACommanderPawn::ToFPSMode);
 
 	PlayerInputComponent->BindAction(TEXT("ToMove"), EInputEvent::IE_Pressed, this, &ACommanderPawn::ToMove);
+}
+
+EBotFireAttitude ACommanderPawn::getAttitude()
+{
+	return _currentAttitude;
+}
+
+void ACommanderPawn::setAttitude(EBotFireAttitude attitude)
+{
+	_currentAttitude = attitude;
+}
+
+void ACommanderPawn::bindAttitude()
+{
+	ATheLeaderPlayerController* pController = Cast<ATheLeaderPlayerController>(GetController());
+	if (pController != nullptr)
+	{
+		pController->FireAttitudeDelegate.BindUObject(this, &ACommanderPawn::changeFireAttitude);
+		UE_LOG(LogTemp, Log, TEXT("pController Exist"));
+	}
+
+	for (auto& controller : _squadMembers)
+	{
+		controller->FireAttitudeDelegate.BindUObject(this, &ACommanderPawn::changeFireAttitude);
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("Binding Finished"));
+}
+
+void ACommanderPawn::changeFireAttitude(EBotFireAttitude attitude)
+{
+	if (!bIsBinded)
+	{
+		bIsBinded = true;
+		bindAttitude();
+	}
+
+	for (auto& controller : _squadMembers)
+	{
+		controller->setAttitude(attitude);
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("Change FIre Attitude Called"));
 }
 
 void ACommanderPawn::MoveForward(float val)
@@ -113,5 +159,7 @@ void ACommanderPawn::ToMove()
 		FHitResult hit;
 		controller->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel3, false, hit);
 		UE_LOG(LogTemp, Log, TEXT("%s"), *hit.Location.ToString());
+
+		Cast<IFireAttitudeDelegateInterface>(controller)->FireAttitudeDelegate.ExecuteIfBound(EBotFireAttitude::FIREATWILL);
 	}
 }

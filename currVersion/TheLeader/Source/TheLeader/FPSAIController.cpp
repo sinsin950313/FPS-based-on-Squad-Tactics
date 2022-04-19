@@ -4,9 +4,8 @@
 #include "FPSAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-const FName AFPSAIController::destination(TEXT("Destination"));
-const FName AFPSAIController::state(TEXT("State"));
-const FName AFPSAIController::fireAttitude(TEXT("FireAttitude"));
+const FName AFPSAIController::Destination(TEXT("Destination"));
+const FName AFPSAIController::State(TEXT("State"));
 
 AFPSAIController::AFPSAIController()
 {
@@ -21,6 +20,8 @@ AFPSAIController::AFPSAIController()
 	{
 		BTAsset = BTObject.Object;
 	}
+
+	Test();
 }
 
 void AFPSAIController::OnPossess(APawn* InPawn)
@@ -29,22 +30,12 @@ void AFPSAIController::OnPossess(APawn* InPawn)
 
 	if (UseBlackboard(BBAsset, Blackboard))
 	{
-		Blackboard->SetValueAsVector(destination, InPawn->GetActorLocation());
+		Blackboard->SetValueAsVector(Destination, InPawn->GetActorLocation());
 		if (!RunBehaviorTree(BTAsset))
 		{
 			UE_LOG(LogTemp, Log, TEXT("AIController could't run BehaviorTree"));
 		}
 	}
-}
-
-EBotFireAttitude AFPSAIController::getAttitude()
-{
-	return _currentAttitude;
-}
-
-void AFPSAIController::setAttitude(EBotFireAttitude attitude)
-{
-	_currentAttitude = attitude;
 }
 
 EBotState AFPSAIController::getState()
@@ -55,4 +46,10 @@ EBotState AFPSAIController::getState()
 void AFPSAIController::setState(EBotState setupState)
 {
 	_currentState = setupState;
+}
+
+void AFPSAIController::setAttitude(EBotFireAttitude attitude)
+{
+	UE_LOG(LogTemp, Log, TEXT("Set Attitude"));
+	_currentAttitude = attitude;
 }

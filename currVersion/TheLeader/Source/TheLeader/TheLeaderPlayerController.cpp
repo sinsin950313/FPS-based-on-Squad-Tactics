@@ -34,6 +34,10 @@ void ATheLeaderPlayerController::changePlayMode(EPlayerMode currPlayState)
 			rootComponent->SetWorldLocation(location);
 			setMouseEnable(true);
 			Possess(_commandModePawn);
+
+			Cast<ACommanderPawn>(_commandModePawn)->changeFireAttitude(EBotFireAttitude::HOLDFIRE);
+			UE_LOG(LogTemp, Log, TEXT("Temporarily set Hold Fire"));
+
 		}
 		break;
 	}

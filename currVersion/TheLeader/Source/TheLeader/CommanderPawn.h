@@ -4,6 +4,8 @@
 
 #include "Camera\CameraComponent.h"
 #include "FPSPawn.h"
+#include "TheLeaderCommonData.h"
+#include "FPSAIController.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/DefaultPawn.h"
@@ -14,21 +16,25 @@ class THELEADER_API ACommanderPawn : public ADefaultPawn
 {
 	GENERATED_BODY()
 
-public:
 	// Sets default values for this pawn's properties
+public:
 	ACommanderPawn();
+private:
+	UCameraComponent* _cameraComponent;
 
-protected:
 	// Called when the game starts or when spawned
+protected:
 	virtual void BeginPlay() override;
+private:
+	TArray<AFPSAIController*> _squadMembers;
 
-public:	
 	// Called every frame
+public:	
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
+public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 private:
 	void MoveForward(float val);
 	void MoveBackward(float val);
@@ -38,7 +44,20 @@ private:
 	void ToFPSMode();
 	void ToMove();
 
-	UCameraComponent* _cameraComponent;
+public:
+	EBotFireAttitude getAttitude();
+	void setAttitude(EBotFireAttitude attitude);
+private:
+	EBotFireAttitude _currentAttitude;
 
-	TArray<AFPSPawn*> _squadMembers;
+public:
+	static const FName FireAttitude;
+
+public:
+	void bindAttitude();
+private:
+	bool bIsBinded = false;
+
+public:
+	void changeFireAttitude(EBotFireAttitude attitude);
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "TheLeaderCommonData.h"
+#include "FireAttitudeDelegateInterface.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -12,7 +13,7 @@
  * 
  */
 UCLASS()
-class THELEADER_API ATheLeaderPlayerController : public APlayerController
+class THELEADER_API ATheLeaderPlayerController : public APlayerController, public IFireAttitudeDelegateInterface
 {
 	GENERATED_BODY()
 	
