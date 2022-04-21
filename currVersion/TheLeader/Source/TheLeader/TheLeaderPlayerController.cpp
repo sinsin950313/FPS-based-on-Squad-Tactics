@@ -12,15 +12,16 @@ void ATheLeaderPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_fpsModePawn = GetPawn();
-	_commandModePawn = Cast<ACommanderPawn>(GetWorld()->SpawnActor(ACommanderPawn::StaticClass()));
+	_commandModePawn = Cast<ACommanderPawn>(GetPawn());
 }
-void ATheLeaderPlayerController::setMouseEnable(bool enable)
+
+void ATheLeaderPlayerController::SetMouseEnable(bool enable)
 {
 	bEnableMouseOverEvents = enable;
 	bShowMouseCursor = enable;
 }
-void ATheLeaderPlayerController::changePlayMode(EPlayerMode currPlayState)
+
+void ATheLeaderPlayerController::ChangePlayMode(EPlayerMode currPlayState)
 {
 	switch (currPlayState)
 	{
@@ -29,22 +30,31 @@ void ATheLeaderPlayerController::changePlayMode(EPlayerMode currPlayState)
 		USceneComponent* rootComponent = _commandModePawn->GetRootComponent();
 		if (rootComponent != nullptr)
 		{
-			FVector location = _fpsModePawn->GetActorLocation();
-			location.Z += 300;
-			rootComponent->SetWorldLocation(location);
-			setMouseEnable(true);
+			if (!_leaderPawn.IsValid())
+			{
+				_leaderPawn = _commandModePawn->GetLeader();
+			}
+
+			if (_leaderPawn.IsValid())
+			{
+				FVector location = _leaderPawn->GetActorLocation();
+				location.Z += 300;
+				rootComponent->SetWorldLocation(location);
+				SetMouseEnable(true);
+			}
+
 			Possess(_commandModePawn);
-
-			Cast<ACommanderPawn>(_commandModePawn)->changeFireAttitude(EBotFireAttitude::HOLDFIRE);
-			UE_LOG(LogTemp, Log, TEXT("Temporarily set Hold Fire"));
-
 		}
 		break;
 	}
 	case EPlayerMode::COMMODE:
 	{
-		setMouseEnable(false);
-		Possess(_fpsModePawn);
+		SetMouseEnable(false);
+		if (!_leaderPawn.IsValid())
+		{
+			_leaderPawn = _commandModePawn->GetLeader();
+		}
+		Possess(_leaderPawn.Get());
 	}
 		break;
 	default:

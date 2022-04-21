@@ -36,9 +36,9 @@ public:
 
 private:
 	UPROPERTY()
-	UProjectileMovementComponent* projectileMovementComponent;
+	UProjectileMovementComponent* _projectileMovementComponent;
 
-	FTimerHandle countDownTimerHandler;
+	FTimerHandle _countDownTimerHandler;
 	
 	void EndTime();
 };

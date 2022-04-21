@@ -8,11 +8,13 @@
 #include "GameFramework/PawnMovementComponent.h" 
 #include "Components/SphereComponent.h" 
 
-const FName ACommanderPawn::FireAttitude(TEXT("FireAttitude"));
+const FName ACommanderPawn::kFireAttitude(TEXT("FireAttitude"));
 
 // Sets default values
 ACommanderPawn::ACommanderPawn()
 {
+	SetPlayMode(EPlayerMode::COMMODE);
+
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -32,8 +34,42 @@ void ACommanderPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AFPSPawn* squadMember = GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - FVector(100, 0, 0), GetActorRotation());
-	_squadMembers.Add(Cast<AFPSAIController>(squadMember->GetController()));
+	AFPSPawn* member = GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - FVector(0, 0, 0), GetActorRotation());
+	_squadMembers.Add(Cast<AFPSAIController>(member->GetController()));
+
+	member = GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - FVector(100, 0, 0), GetActorRotation());
+	_squadMembers.Add(Cast<AFPSAIController>(member->GetController()));
+}
+
+void ACommanderPawn::DoIterateToMembers(TFunction<void(IFireable*)> doFunction)
+{
+	IFireable* fireable;
+	if (_currentLeader != nullptr && !_currentLeader->IsActorBeingDestroyed())
+	{
+		ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(_currentLeader->GetController());
+		if (controller != nullptr)
+		{
+			fireable = Cast<IFireable>(controller);
+			doFunction(fireable);
+		}
+	}
+
+	for (auto& member : _squadMembers)
+	{
+		fireable = Cast<IFireable>(member);
+		doFunction(fireable);
+	}
+}
+
+AFPSPawn* ACommanderPawn::GetLeader()
+{
+	if (_currentLeader == nullptr || _currentLeader->IsActorBeingDestroyed())
+	{
+		AFPSAIController* controller = *_squadMembers.begin();
+		_currentLeader = Cast<AFPSPawn>(controller->GetPawn());
+		_squadMembers.Remove(controller);
+	}
+	return _currentLeader;
 }
 
 // Called every frame
@@ -41,6 +77,7 @@ void ACommanderPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	DoIterateToMembers([](IFireable* fireable)->void { fireable->IsAttack(); });
 }
 
 // Called to bind functionality to input
@@ -59,49 +96,6 @@ void ACommanderPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("ToFPS"), EInputEvent::IE_Pressed, this, &ACommanderPawn::ToFPSMode);
 
 	PlayerInputComponent->BindAction(TEXT("ToMove"), EInputEvent::IE_Pressed, this, &ACommanderPawn::ToMove);
-}
-
-EBotFireAttitude ACommanderPawn::getAttitude()
-{
-	return _currentAttitude;
-}
-
-void ACommanderPawn::setAttitude(EBotFireAttitude attitude)
-{
-	_currentAttitude = attitude;
-}
-
-void ACommanderPawn::bindAttitude()
-{
-	ATheLeaderPlayerController* pController = Cast<ATheLeaderPlayerController>(GetController());
-	if (pController != nullptr)
-	{
-		pController->FireAttitudeDelegate.BindUObject(this, &ACommanderPawn::changeFireAttitude);
-		UE_LOG(LogTemp, Log, TEXT("pController Exist"));
-	}
-
-	for (auto& controller : _squadMembers)
-	{
-		controller->FireAttitudeDelegate.BindUObject(this, &ACommanderPawn::changeFireAttitude);
-	}
-
-	UE_LOG(LogTemp, Log, TEXT("Binding Finished"));
-}
-
-void ACommanderPawn::changeFireAttitude(EBotFireAttitude attitude)
-{
-	if (!bIsBinded)
-	{
-		bIsBinded = true;
-		bindAttitude();
-	}
-
-	for (auto& controller : _squadMembers)
-	{
-		controller->setAttitude(attitude);
-	}
-
-	UE_LOG(LogTemp, Log, TEXT("Change FIre Attitude Called"));
 }
 
 void ACommanderPawn::MoveForward(float val)
@@ -147,7 +141,7 @@ void ACommanderPawn::ToFPSMode()
 	if (currController != nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("To FPS Mode"));
-		currController->changePlayMode(EPlayerMode::COMMODE);
+		currController->ChangePlayMode(GetPlayMode());
 	}
 }
 
@@ -159,7 +153,16 @@ void ACommanderPawn::ToMove()
 		FHitResult hit;
 		controller->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel3, false, hit);
 		UE_LOG(LogTemp, Log, TEXT("%s"), *hit.Location.ToString());
-
-		Cast<IFireAttitudeDelegateInterface>(controller)->FireAttitudeDelegate.ExecuteIfBound(EBotFireAttitude::FIREATWILL);
 	}
+}
+
+void ACommanderPawn::ChangeSquadFireAttitude(EBotFireAttitude attitude)
+{
+	_currentFireAttitude = attitude;
+	DoIterateToMembers([attitude](IFireable* fireable)->void { fireable->SetFireAttitude(attitude); });
+}
+
+EBotFireAttitude ACommanderPawn::GetSquadFireAttitude()
+{
+	return _currentFireAttitude;
 }

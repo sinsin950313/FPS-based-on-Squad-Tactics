@@ -6,13 +6,14 @@
 #include "FPSPawn.h"
 #include "TheLeaderCommonData.h"
 #include "FPSAIController.h"
+#include "InGamePawn.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/DefaultPawn.h"
 #include "CommanderPawn.generated.h"
 
 UCLASS()
-class THELEADER_API ACommanderPawn : public ADefaultPawn
+class THELEADER_API ACommanderPawn : public ADefaultPawn, public IInGamePawn
 {
 	GENERATED_BODY()
 
@@ -27,6 +28,11 @@ protected:
 	virtual void BeginPlay() override;
 private:
 	TArray<AFPSAIController*> _squadMembers;
+	UPROPERTY()
+	AFPSPawn* _currentLeader;
+	void DoIterateToMembers(TFunction<void(IFireable*)> func);
+public:
+	AFPSPawn* GetLeader();
 
 	// Called every frame
 public:	
@@ -45,19 +51,9 @@ private:
 	void ToMove();
 
 public:
-	EBotFireAttitude getAttitude();
-	void setAttitude(EBotFireAttitude attitude);
+	static const FName kFireAttitude;
+	void ChangeSquadFireAttitude(EBotFireAttitude attitude);
+	EBotFireAttitude GetSquadFireAttitude();
 private:
-	EBotFireAttitude _currentAttitude;
-
-public:
-	static const FName FireAttitude;
-
-public:
-	void bindAttitude();
-private:
-	bool bIsBinded = false;
-
-public:
-	void changeFireAttitude(EBotFireAttitude attitude);
+	EBotFireAttitude _currentFireAttitude;
 };

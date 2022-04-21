@@ -18,10 +18,10 @@ AProjectileActor::AProjectileActor()
 	sphereComponent->SetSphereRadius(0.1f);
 	RootComponent = sphereComponent;
 
-	projectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
-	projectileMovementComponent->InitialSpeed = 10000;
-	projectileMovementComponent->UpdatedComponent = RootComponent;
-	AddOwnedComponent(projectileMovementComponent);
+	_projectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
+	_projectileMovementComponent->InitialSpeed = 10000;
+	_projectileMovementComponent->UpdatedComponent = RootComponent;
+	AddOwnedComponent(_projectileMovementComponent);
 
 	UStaticMeshComponent* meshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
 	meshComponent->SetupAttachment(RootComponent);
@@ -39,7 +39,7 @@ void AProjectileActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorldTimerManager().SetTimer(countDownTimerHandler, this, &AProjectileActor::EndTime, 3.0f, true);
+	GetWorldTimerManager().SetTimer(_countDownTimerHandler, this, &AProjectileActor::EndTime, 3.0f, true);
 }
 
 // Called every frame

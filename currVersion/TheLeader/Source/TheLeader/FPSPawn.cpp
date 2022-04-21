@@ -11,6 +11,8 @@
 // Sets default values
 AFPSPawn::AFPSPawn()
 {
+	SetPlayMode(EPlayerMode::FPSMODE);
+
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -73,8 +75,6 @@ void AFPSPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis(TEXT("LookAt"), this, &AFPSPawn::LookAt);
 
 	PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed, this, &AFPSPawn::AttackStart);
-	//Repeat in Tick when use mouse button
-	//PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Repeat, this, &AFPSPawn::AttackStart);
 	PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Released, this, &AFPSPawn::AttackStop);
 
 	PlayerInputComponent->BindAction(TEXT("Kneel"), EInputEvent::IE_Pressed, this, &AFPSPawn::Kneel);
@@ -84,22 +84,22 @@ void AFPSPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AFPSPawn::MoveForward(float val)
 {
-	AddMovementInput(GetActorForwardVector(), val * getCurrentMovementCoefficient());
+	AddMovementInput(GetActorForwardVector(), val * GetCurrentMovementCoefficient());
 }
 
 void AFPSPawn::MoveBackward(float val)
 {
-	AddMovementInput(GetActorForwardVector(), val * getCurrentMovementCoefficient());
+	AddMovementInput(GetActorForwardVector(), val * GetCurrentMovementCoefficient());
 }
 
 void AFPSPawn::MoveLeftSide(float val)
 {
-	AddMovementInput(GetActorRightVector(), val * getCurrentMovementCoefficient());
+	AddMovementInput(GetActorRightVector(), val * GetCurrentMovementCoefficient());
 }
 
 void AFPSPawn::MoveRightSide(float val)
 {
-	AddMovementInput(GetActorRightVector(), val * getCurrentMovementCoefficient());
+	AddMovementInput(GetActorRightVector(), val * GetCurrentMovementCoefficient());
 }
 
 void AFPSPawn::Turn(float val)
@@ -115,13 +115,11 @@ void AFPSPawn::LookAt(float val)
 void AFPSPawn::AttackStart()
 {
 	_bAttackStart = true;
-	UE_LOG(LogTemp, Log, TEXT("Attack Start"));
 }
 
 void AFPSPawn::AttackStop()
 {
 	_bAttackStart = false;
-	UE_LOG(LogTemp, Log, TEXT("Attack Stop"));
 }
 
 void AFPSPawn::Kneel()
@@ -142,7 +140,7 @@ void AFPSPawn::ToCommandMode()
 	if (currController != nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("To Command Mode"));
-		currController->changePlayMode(EPlayerMode::FPSMODE);
+		currController->ChangePlayMode(GetPlayMode());
 	}
 }
 
@@ -150,6 +148,9 @@ void AFPSPawn::Fire()
 {
 	GetWorld()->SpawnActor<AProjectileActor>(_cameraComponent->GetComponentLocation() + _cameraComponent->GetForwardVector() * 100, _cameraComponent->GetComponentRotation());
 	_lastAttackTime = 0;
+
+	UE_LOG(LogTemp, Log, TEXT("Call Fire Attitude Delegate execute"));
+	FireAttitudeDelegate.ExecuteIfBound();
 }
 
 void AFPSPawn::SetState(EState state)
@@ -176,20 +177,20 @@ void AFPSPawn::SetState(EState state)
 	}
 }
 
-float AFPSPawn::getCurrentMovementCoefficient()
+float AFPSPawn::GetCurrentMovementCoefficient()
 {
 	float returnVal = 0.0f;
 
 	switch (_currentState)
 	{
 	case AFPSPawn::EState::STANDUP:
-		returnVal = _standUpStateCoefficient;
+		returnVal = _kStandUpStateCoefficient;
 		break;
 	case AFPSPawn::EState::KNEEL:
-		returnVal = _kneelStateCoefficient;
+		returnVal = _kKneelStateCoefficient;
 		break;
 	case AFPSPawn::EState::PINNED:
-		returnVal = _pinnedStateCoefficient;
+		returnVal = _kPinnedStateCoefficient;
 		break;
 	default:
 		break;

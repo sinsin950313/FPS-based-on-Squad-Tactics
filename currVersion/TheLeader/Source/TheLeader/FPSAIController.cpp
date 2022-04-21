@@ -4,52 +4,44 @@
 #include "FPSAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-const FName AFPSAIController::Destination(TEXT("Destination"));
-const FName AFPSAIController::State(TEXT("State"));
+const FName AFPSAIController::kDestination(TEXT("Destination"));
+const FName AFPSAIController::kState(TEXT("State"));
 
 AFPSAIController::AFPSAIController()
 {
 	static ConstructorHelpers::FObjectFinder<UBlackboardData> BBObject(TEXT("/Game/FPSAIBlackBoard.FPSAIBlackBoard"));
 	if (BBObject.Succeeded())
 	{
-		BBAsset = BBObject.Object;
+		_BBAsset = BBObject.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("/Game/FPSAIBehaviorTree.FPSAIBehaviorTree"));
 	if (BTObject.Succeeded())
 	{
-		BTAsset = BTObject.Object;
+		_BTAsset = BTObject.Object;
 	}
-
-	Test();
 }
 
 void AFPSAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	if (UseBlackboard(BBAsset, Blackboard))
+	if (UseBlackboard(_BBAsset, Blackboard))
 	{
-		Blackboard->SetValueAsVector(Destination, InPawn->GetActorLocation());
-		if (!RunBehaviorTree(BTAsset))
+		Blackboard->SetValueAsVector(kDestination, InPawn->GetActorLocation());
+		if (!RunBehaviorTree(_BTAsset))
 		{
 			UE_LOG(LogTemp, Log, TEXT("AIController could't run BehaviorTree"));
 		}
 	}
 }
 
-EBotState AFPSAIController::getState()
+EBotState AFPSAIController::GetState()
 {
 	return _currentState;
 }
 
-void AFPSAIController::setState(EBotState setupState)
+void AFPSAIController::SetState(EBotState state)
 {
-	_currentState = setupState;
-}
-
-void AFPSAIController::setAttitude(EBotFireAttitude attitude)
-{
-	UE_LOG(LogTemp, Log, TEXT("Set Attitude"));
-	_currentAttitude = attitude;
+	_currentState = state;
 }

@@ -3,7 +3,9 @@
 #pragma once
 
 #include "TheLeaderCommonData.h"
-#include "FireAttitudeDelegateInterface.h"
+#include "FPSPawn.h"
+#include "Fireable.h"
+#include "CommanderPawn.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -13,23 +15,21 @@
  * 
  */
 UCLASS()
-class THELEADER_API ATheLeaderPlayerController : public APlayerController, public IFireAttitudeDelegateInterface
+class THELEADER_API ATheLeaderPlayerController : public APlayerController, public IFireable
 {
 	GENERATED_BODY()
 	
 public:
 	ATheLeaderPlayerController();
-	void changePlayMode(EPlayerMode currPlayState);
+	void ChangePlayMode(EPlayerMode currPlayState);
 
 protected:
 	void BeginPlay() override;
 
 private:
 	UPROPERTY()
-	APawn* _fpsModePawn;
+	ACommanderPawn* _commandModePawn;
+	TWeakObjectPtr<AFPSPawn> _leaderPawn;
 
-	UPROPERTY()
-	APawn* _commandModePawn;
-
-	void setMouseEnable(bool enable);
+	void SetMouseEnable(bool enable);
 };

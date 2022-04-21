@@ -2,11 +2,11 @@
 
 
 #include "TheLeaderGameModeBase.h"
-#include "FPSPawn.h"
+#include "CommanderPawn.h"
 #include "TheLeaderPlayerController.h"
 
 ATheLeaderGameModeBase::ATheLeaderGameModeBase()
 {
-	DefaultPawnClass = AFPSPawn::StaticClass();
+	DefaultPawnClass = ACommanderPawn::StaticClass();
 	PlayerControllerClass = ATheLeaderPlayerController::StaticClass();
 }

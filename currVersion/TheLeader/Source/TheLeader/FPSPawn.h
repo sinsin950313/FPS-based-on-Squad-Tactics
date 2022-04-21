@@ -3,13 +3,15 @@
 #pragma once
 
 #include "Camera\CameraComponent.h"
+#include "InGamePawn.h"
+#include "FireAttitudeDelegateInterface.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "FPSPawn.generated.h"
 
 UCLASS()
-class THELEADER_API AFPSPawn : public ACharacter
+class THELEADER_API AFPSPawn : public ACharacter, public IInGamePawn, public IFireAttitudeDelegateInterface
 {
 	GENERATED_BODY()
 
@@ -48,11 +50,11 @@ private:
 	enum class EState { STANDUP, KNEEL, PINNED };
 	void SetState(EState state);
 	EState _currentState = EState::STANDUP;
-	float getCurrentMovementCoefficient();
+	float GetCurrentMovementCoefficient();
 
-	const float _standUpStateCoefficient = 1.0f;
-	const float _kneelStateCoefficient = 0.7;
-	const float _pinnedStateCoefficient = 0.3;
+	const float _kStandUpStateCoefficient = 1.0f;
+	const float _kKneelStateCoefficient = 0.7;
+	const float _kPinnedStateCoefficient = 0.3;
 
 	UCameraComponent* _cameraComponent;
 };

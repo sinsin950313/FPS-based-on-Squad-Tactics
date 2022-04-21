@@ -5,7 +5,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "TheLeaderCommonData.h"
-#include "FireAttitudeDelegateInterface.h"
+#include "Fireable.h"
 
 #include "CoreMinimal.h"
 #include "AIController.h"
@@ -15,7 +15,7 @@
  * 
  */
 UCLASS()
-class THELEADER_API AFPSAIController : public AAIController, public IFireAttitudeDelegateInterface
+class THELEADER_API AFPSAIController : public AAIController, public IFireable
 {
 	GENERATED_BODY()
 	
@@ -24,21 +24,18 @@ public:
 
 	virtual void OnPossess(APawn* InPawn) override;
 
-	EBotState getState();
-	void setState(EBotState setupState);
+public:
+	EBotState GetState();
+	void SetState(EBotState state);
+private:
+	EBotState _currentState;
 
-	void setAttitude(EBotFireAttitude attitude);
-
-	static const FName Destination;
-	static const FName State;
-
+public:
+	static const FName kDestination;
+	static const FName kState;
 private:
 	UPROPERTY()
-	UBehaviorTree* BTAsset;
-
+	UBehaviorTree* _BTAsset;
 	UPROPERTY()
-	UBlackboardData* BBAsset;
-
-	EBotState _currentState;
-	EBotFireAttitude _currentAttitude;
+	UBlackboardData* _BBAsset;
 };

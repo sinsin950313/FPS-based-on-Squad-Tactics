@@ -29,5 +29,5 @@ void UFPSPawnStateCheckBTService::TickNode(UBehaviorTreeComponent& OwnerComp, ui
 		return;
 	}
 
-	OwnerComp.GetBlackboardComponent()->SetValueAsEnum(AFPSAIController::State, controller->getState());
+	OwnerComp.GetBlackboardComponent()->SetValueAsEnum(AFPSAIController::kState, controller->GetState());
 }

@@ -4,15 +4,6 @@
 
 #include "CoreMinimal.h"
 
-enum class EPlayerMode { FPSMODE, COMMODE };
-
-UENUM(BlueprintType)
-enum EBotFireAttitude
-{
-	FIREATWILL UMETA(DisplayName = "FIREATWILL"),
-	HOLDFIRE UMETA(DisplayName = "HOLDFIRE")
-};
-
 UENUM(BlueprintType)
 enum EBotState
 {
