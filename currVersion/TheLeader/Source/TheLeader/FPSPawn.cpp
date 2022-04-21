@@ -150,7 +150,7 @@ void AFPSPawn::Fire()
 	_lastAttackTime = 0;
 
 	UE_LOG(LogTemp, Log, TEXT("Call Fire Attitude Delegate execute"));
-	FireAttitudeDelegate.ExecuteIfBound();
+	FireAttitudeDelegate.ExecuteIfBound(EBotFireAttitude::FIREATWILL);
 }
 
 void AFPSPawn::SetState(EState state)

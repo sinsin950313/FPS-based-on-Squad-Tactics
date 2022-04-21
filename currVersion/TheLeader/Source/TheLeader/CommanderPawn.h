@@ -30,6 +30,7 @@ private:
 	TArray<AFPSAIController*> _squadMembers;
 	UPROPERTY()
 	AFPSPawn* _currentLeader;
+	void CreateMember(FVector relativeLocation);
 	void DoIterateToMembers(TFunction<void(IFireable*)> func);
 public:
 	AFPSPawn* GetLeader();

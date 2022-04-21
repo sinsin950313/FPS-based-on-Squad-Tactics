@@ -3,12 +3,13 @@
 #pragma once
 
 #include "TheLeaderCommonData.h"
+#include "Fireable.h"
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "FireAttitudeDelegateInterface.generated.h"
 
-DECLARE_DELEGATE(FChangeFireAttitude);
+DECLARE_DELEGATE_OneParam(FChangeFireAttitude, EBotFireAttitude);
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)

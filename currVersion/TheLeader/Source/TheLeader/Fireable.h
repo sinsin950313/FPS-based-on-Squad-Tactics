@@ -30,7 +30,8 @@ class THELEADER_API IFireable
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	IFireable();
-	void SetFireAttitude(EBotFireAttitude attitude);
+	UFUNCTION()
+	virtual void SetFireAttitude(EBotFireAttitude attitude);
 	EBotFireAttitude GetFireAttitude();
 private:
 	EBotFireAttitude _currentAttitude;

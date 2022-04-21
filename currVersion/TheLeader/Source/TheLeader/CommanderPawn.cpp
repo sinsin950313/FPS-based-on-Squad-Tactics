@@ -34,10 +34,15 @@ void ACommanderPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AFPSPawn* member = GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - FVector(0, 0, 0), GetActorRotation());
-	_squadMembers.Add(Cast<AFPSAIController>(member->GetController()));
+	CreateMember(FVector(0, 0, 0));
+	CreateMember(FVector(100, 0, 0));
+}
 
-	member = GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - FVector(100, 0, 0), GetActorRotation());
+void ACommanderPawn::CreateMember(FVector relativeLocation)
+{
+	AFPSPawn* member = GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - relativeLocation, GetActorRotation());
+	AFPSAIController* controller = Cast<AFPSAIController>(member->GetController());
+	member->FireAttitudeDelegate.BindUFunction(controller, FName("SetFireAttitude"));
 	_squadMembers.Add(Cast<AFPSAIController>(member->GetController()));
 }
 

@@ -11,6 +11,7 @@ IFireable::IFireable()
 
 void IFireable::SetFireAttitude(EBotFireAttitude attitude)
 {
+	UE_LOG(LogTemp, Log, TEXT("Call Set Fire Attitude"))
 	_currentAttitude = attitude;
 }
 
