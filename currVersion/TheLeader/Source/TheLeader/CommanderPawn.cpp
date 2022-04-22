@@ -29,6 +29,13 @@ ACommanderPawn::ACommanderPawn()
 	_cameraComponent->SetRelativeRotation(FRotator(-30.0f, 0.0f, 0.0f));
 }
 
+void ACommanderPawn::SetDirection(float yawVal)
+{
+	FRotator rotation = RootComponent->GetComponentRotation();
+	rotation.Yaw = yawVal;
+	RootComponent->SetWorldRotation(rotation);
+}
+
 // Called when the game starts or when spawned
 void ACommanderPawn::BeginPlay()
 {
@@ -36,6 +43,8 @@ void ACommanderPawn::BeginPlay()
 
 	CreateMember(FVector(0, 0, 0));
 	CreateMember(FVector(100, 0, 0));
+
+	ToFPSMode();
 }
 
 void ACommanderPawn::CreateMember(FVector relativeLocation)
@@ -46,23 +55,17 @@ void ACommanderPawn::CreateMember(FVector relativeLocation)
 	_squadMembers.Add(Cast<AFPSAIController>(member->GetController()));
 }
 
-void ACommanderPawn::DoIterateToMembers(TFunction<void(IFireable*)> doFunction)
+template<typename ToLeader, typename ToMembers>
+void ACommanderPawn::DoIterateToMembers(ToLeader doFunctionWithLeader, ToMembers doFunctionWithMembers)
 {
-	IFireable* fireable;
 	if (_currentLeader != nullptr && !_currentLeader->IsActorBeingDestroyed())
 	{
-		ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(_currentLeader->GetController());
-		if (controller != nullptr)
-		{
-			fireable = Cast<IFireable>(controller);
-			doFunction(fireable);
-		}
+		doFunctionWithLeader(_currentLeader);
 	}
 
 	for (auto& member : _squadMembers)
 	{
-		fireable = Cast<IFireable>(member);
-		doFunction(fireable);
+		doFunctionWithMembers(member);
 	}
 }
 
@@ -82,7 +85,25 @@ void ACommanderPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	DoIterateToMembers([](IFireable* fireable)->void { fireable->IsAttack(); });
+	bool isFire = false;
+	DoIterateToMembers(
+		[&isFire](AFPSPawn* pawn)-> void {
+			ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(pawn->GetController());
+			if (controller != nullptr)
+			{
+				IFireable* fireable = Cast<IFireable>(controller);
+				isFire = fireable->IsAttack();
+			}
+		},
+		[&isFire](AFPSAIController* controller)-> void {
+			IFireable* fireable = Cast<IFireable>(controller);
+			isFire = fireable->IsAttack();
+		});
+
+	if (GetSquadFireAttitude() == EBotFireAttitude::HOLDFIRE && isFire)
+	{
+		ChangeSquadFireAttitude(EBotFireAttitude::FIREATWILL);
+	}
 }
 
 // Called to bind functionality to input
@@ -158,13 +179,29 @@ void ACommanderPawn::ToMove()
 		FHitResult hit;
 		controller->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel3, false, hit);
 		UE_LOG(LogTemp, Log, TEXT("%s"), *hit.Location.ToString());
+		DoIterateToMembers(
+			[](AFPSPawn* pawn)->void {
+				//do nothing
+			},
+			[hit](AFPSAIController* controller)->void {
+				controller->MoveToDestination(hit.Location);
+			});
 	}
 }
 
 void ACommanderPawn::ChangeSquadFireAttitude(EBotFireAttitude attitude)
 {
 	_currentFireAttitude = attitude;
-	DoIterateToMembers([attitude](IFireable* fireable)->void { fireable->SetFireAttitude(attitude); });
+	DoIterateToMembers(
+		[attitude](AFPSPawn* pawn)->void {
+			ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(pawn->GetController());
+			IFireable* fireable = Cast<IFireable>(controller);
+			fireable->SetFireAttitude(attitude);
+		},
+		[attitude](AFPSAIController* controller)->void {
+			IFireable* fireable = Cast<IFireable>(controller);
+			fireable->SetFireAttitude(attitude);
+		});
 }
 
 EBotFireAttitude ACommanderPawn::GetSquadFireAttitude()

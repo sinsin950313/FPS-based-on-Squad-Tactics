@@ -45,3 +45,9 @@ void AFPSAIController::SetState(EBotState state)
 {
 	_currentState = state;
 }
+
+void AFPSAIController::MoveToDestination(FVector destination)
+{
+	SetState(EBotState::MOVE);
+	Blackboard->SetValueAsVector(kDestination, destination);
+}

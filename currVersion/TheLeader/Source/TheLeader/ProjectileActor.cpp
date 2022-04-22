@@ -51,6 +51,10 @@ void AProjectileActor::Tick(float DeltaTime)
 void AProjectileActor::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
 	UE_LOG(LogTemp, Log, TEXT("Hit %s, %s"), *Hit.Actor->StaticClass()->GetName(), *Hit.Actor->GetActorLocation().ToString());
+	if (Hit.Actor.IsValid())
+	{
+		Hit.Actor->TakeDamage(10.0f, FDamageEvent(), GetInstigator()->GetController(), this);
+	}
 	Destroy();
 }
 

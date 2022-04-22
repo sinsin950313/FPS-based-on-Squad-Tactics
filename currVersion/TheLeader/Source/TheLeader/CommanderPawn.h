@@ -20,6 +20,7 @@ class THELEADER_API ACommanderPawn : public ADefaultPawn, public IInGamePawn
 	// Sets default values for this pawn's properties
 public:
 	ACommanderPawn();
+	void SetDirection(float yawVal);
 private:
 	UCameraComponent* _cameraComponent;
 
@@ -31,7 +32,8 @@ private:
 	UPROPERTY()
 	AFPSPawn* _currentLeader;
 	void CreateMember(FVector relativeLocation);
-	void DoIterateToMembers(TFunction<void(IFireable*)> func);
+	template<typename ToLeader, typename ToMembers>
+	void DoIterateToMembers(ToLeader doFunctionWithLeader, ToMembers doFunctionWithMembers);
 public:
 	AFPSPawn* GetLeader();
 

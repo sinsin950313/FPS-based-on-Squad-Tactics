@@ -146,7 +146,9 @@ void AFPSPawn::ToCommandMode()
 
 void AFPSPawn::Fire()
 {
-	GetWorld()->SpawnActor<AProjectileActor>(_cameraComponent->GetComponentLocation() + _cameraComponent->GetForwardVector() * 100, _cameraComponent->GetComponentRotation());
+	FActorSpawnParameters param;
+	param.Instigator = this;
+	GetWorld()->SpawnActor<AProjectileActor>(_cameraComponent->GetComponentLocation() + _cameraComponent->GetForwardVector() * 100, _cameraComponent->GetComponentRotation(), param);
 	_lastAttackTime = 0;
 
 	UE_LOG(LogTemp, Log, TEXT("Call Fire Attitude Delegate execute"));
@@ -197,4 +199,20 @@ float AFPSPawn::GetCurrentMovementCoefficient()
 	}
 
 	return returnVal;
+}
+
+float AFPSPawn::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float finalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	UE_LOG(LogTemp, Log, TEXT("Final Damage : %f"), finalDamage);
+	_HP -= finalDamage;
+	UE_LOG(LogTemp, Log, TEXT("Remain HP : %d"), _HP);
+
+	if (_HP <= 0)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Unit Dead"));
+		Destroy();
+	}
+
+	return finalDamage;
 }

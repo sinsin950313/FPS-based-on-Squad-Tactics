@@ -38,4 +38,7 @@ private:
 	UBehaviorTree* _BTAsset;
 	UPROPERTY()
 	UBlackboardData* _BBAsset;
+
+public:
+	void MoveToDestination(FVector destination);
 };

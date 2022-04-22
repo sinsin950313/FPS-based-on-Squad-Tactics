@@ -40,6 +40,10 @@ void ATheLeaderPlayerController::ChangePlayMode(EPlayerMode currPlayState)
 				FVector location = _leaderPawn->GetActorLocation();
 				location.Z += 300;
 				rootComponent->SetWorldLocation(location);
+
+				FRotator rotation = _leaderPawn->GetActorRotation();
+				_commandModePawn->SetDirection(rotation.Yaw);
+
 				SetMouseEnable(true);
 			}
 
