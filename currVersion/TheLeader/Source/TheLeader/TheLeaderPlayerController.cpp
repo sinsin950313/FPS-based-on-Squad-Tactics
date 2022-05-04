@@ -4,11 +4,9 @@
 #include "TheLeaderPlayerController.h"
 #include "CommanderPawn.h"
 
-ATheLeaderPlayerController::TheLeaderPlayerControllerBuilder ATheLeaderPlayerController::_builder;
-
 ATheLeaderPlayerController::ATheLeaderPlayerController()
 {
-	_attitude = NewObject<UFireAttitude>();
+	InGameController::Builder().Belonged(EBelonged::PLAYER).Build(this);
 }
 
 void ATheLeaderPlayerController::BeginPlay()
@@ -22,22 +20,6 @@ void ATheLeaderPlayerController::SetMouseEnable(bool enable)
 {
 	bEnableMouseOverEvents = enable;
 	bShowMouseCursor = enable;
-}
-
-void ATheLeaderPlayerController::SetFireAttitude(EBotFireAttitude attitude)
-{
-	_attitude->SetFireAttitude(attitude);
-}
-
-EBotFireAttitude ATheLeaderPlayerController::GetFireAttitude()
-{
-	return _attitude->GetFireAttitude();
-}
-
-ATheLeaderPlayerController::TheLeaderPlayerControllerBuilder& ATheLeaderPlayerController::Builder()
-{
-	_builder.clear();
-	return _builder;
 }
 
 void ATheLeaderPlayerController::ChangePlayMode(EPlayerMode currPlayState)
@@ -83,29 +65,4 @@ void ATheLeaderPlayerController::ChangePlayMode(EPlayerMode currPlayState)
 	default:
 		break;
 	}
-}
-
-ATheLeaderPlayerController::TheLeaderPlayerControllerBuilder::TheLeaderPlayerControllerBuilder()
-{
-	clear();
-}
-
-void ATheLeaderPlayerController::TheLeaderPlayerControllerBuilder::Build(UObject* param)
-{
-	ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(param);
-
-	controller->_attitude->SetFireAttitude(_attitude);
-
-	clear();
-}
-
-void ATheLeaderPlayerController::TheLeaderPlayerControllerBuilder::clear()
-{
-	_attitude = EBotFireAttitude::FIREATWILL;
-}
-
-ATheLeaderPlayerController::TheLeaderPlayerControllerBuilder& ATheLeaderPlayerController::TheLeaderPlayerControllerBuilder::FireAttitude(EBotFireAttitude attitude)
-{
-	_attitude = attitude;
-	return *this;
 }

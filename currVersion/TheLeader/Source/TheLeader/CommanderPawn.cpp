@@ -49,9 +49,12 @@ void ACommanderPawn::BeginPlay()
 void ACommanderPawn::CreateMember(FVector relativeLocation)
 {
 	AFPSPawn* member = GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - relativeLocation, GetActorRotation());
+
 	AFPSAIController* controller = Cast<AFPSAIController>(member->GetController());
 	member->FireAttitudeDelegate.BindUFunction(controller, FName("SetFireAttitude"));
 	_squadMembers.Add(Cast<AFPSAIController>(member->GetController()));
+
+	InGameController::Builder().Belonged(EBelonged::PLAYER).Build(controller);
 }
 
 template<typename ToLeader, typename ToMembers>

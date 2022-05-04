@@ -19,7 +19,7 @@ enum EBotFireAttitude
 	HOLDFIRE UMETA(DisplayName = "HOLDFIRE")
 };
 
-enum class ETeam
+enum class EBelonged
 {
 	PLAYER,
 	ENEMY

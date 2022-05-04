@@ -64,4 +64,8 @@ private:
 
 private:
 	const EPlayerMode _mode = EPlayerMode::FPSMODE;
+
+public:
+	UPROPERTY(EditAnywhere)
+	EBelonged belong;
 };

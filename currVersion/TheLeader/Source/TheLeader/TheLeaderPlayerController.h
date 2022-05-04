@@ -5,9 +5,7 @@
 #include "TheLeaderCommonData.h"
 #include "FPSPawn.h"
 #include "CommanderPawn.h"
-#include "TheLeaderCommonData.h"
-#include "FireAttitude.h"
-#include "CustomUObjectBuilder.h"
+#include "InGameController.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -17,29 +15,12 @@
  * 
  */
 UCLASS()
-class THELEADER_API ATheLeaderPlayerController : public APlayerController
+class THELEADER_API ATheLeaderPlayerController : public APlayerController, public InGameController
 {
 	GENERATED_BODY()
 	
 public:
 	ATheLeaderPlayerController();
-
-public:
-	class TheLeaderPlayerControllerBuilder : public CustomUObjectBuilder
-	{
-	public:
-		TheLeaderPlayerControllerBuilder();
-		virtual void Build(UObject* param) override;
-		virtual void clear() override;
-
-	public:
-		TheLeaderPlayerControllerBuilder& FireAttitude(EBotFireAttitude attitude);
-	private:
-		EBotFireAttitude _attitude;
-	};
-	TheLeaderPlayerControllerBuilder& Builder();
-private:
-	static TheLeaderPlayerControllerBuilder _builder;
 
 public:
 	void ChangePlayMode(EPlayerMode currPlayState);
@@ -54,11 +35,4 @@ private:
 
 private:
 	void SetMouseEnable(bool enable);
-
-public:
-	void SetFireAttitude(EBotFireAttitude attitude);
-	EBotFireAttitude GetFireAttitude();
-private:
-	UPROPERTY()
-	UFireAttitude* _attitude;
 };
