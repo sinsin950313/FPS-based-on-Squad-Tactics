@@ -6,14 +6,13 @@
 #include "FPSPawn.h"
 #include "TheLeaderCommonData.h"
 #include "FPSAIController.h"
-#include "InGamePawn.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/DefaultPawn.h"
 #include "CommanderPawn.generated.h"
 
 UCLASS()
-class THELEADER_API ACommanderPawn : public ADefaultPawn, public IInGamePawn
+class THELEADER_API ACommanderPawn : public ADefaultPawn
 {
 	GENERATED_BODY()
 
@@ -52,6 +51,7 @@ private:
 	void Turn(float val);
 	void ToFPSMode();
 	void ToMove();
+	void LookAt();
 
 public:
 	static const FName kFireAttitude;
@@ -59,4 +59,7 @@ public:
 	EBotFireAttitude GetSquadFireAttitude();
 private:
 	EBotFireAttitude _currentFireAttitude;
+
+private:
+	const EPlayerMode _mode = EPlayerMode::COMMODE;
 };

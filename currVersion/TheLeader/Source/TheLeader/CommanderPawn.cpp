@@ -7,14 +7,13 @@
 #include "TheLeaderCommonData.h"
 #include "GameFramework/PawnMovementComponent.h" 
 #include "Components/SphereComponent.h" 
+#include "BehaviorTree/BlackboardComponent.h" 
 
 const FName ACommanderPawn::kFireAttitude(TEXT("FireAttitude"));
 
 // Sets default values
-ACommanderPawn::ACommanderPawn()
+ACommanderPawn::ACommanderPawn() : _mode(EPlayerMode::COMMODE)
 {
-	SetPlayMode(EPlayerMode::COMMODE);
-
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -91,13 +90,11 @@ void ACommanderPawn::Tick(float DeltaTime)
 			ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(pawn->GetController());
 			if (controller != nullptr)
 			{
-				IFireable* fireable = Cast<IFireable>(controller);
-				isFire = fireable->IsAttack();
+				isFire = (controller->GetFireAttitude() == EBotFireAttitude::FIREATWILL);
 			}
 		},
 		[&isFire](AFPSAIController* controller)-> void {
-			IFireable* fireable = Cast<IFireable>(controller);
-			isFire = fireable->IsAttack();
+			isFire = controller->GetFireAttitude() == EBotFireAttitude::FIREATWILL;
 		});
 
 	if (GetSquadFireAttitude() == EBotFireAttitude::HOLDFIRE && isFire)
@@ -122,6 +119,7 @@ void ACommanderPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("ToFPS"), EInputEvent::IE_Pressed, this, &ACommanderPawn::ToFPSMode);
 
 	PlayerInputComponent->BindAction(TEXT("ToMove"), EInputEvent::IE_Pressed, this, &ACommanderPawn::ToMove);
+	PlayerInputComponent->BindAction(TEXT("LookAt"), EInputEvent::IE_Released, this, &ACommanderPawn::LookAt);
 }
 
 void ACommanderPawn::MoveForward(float val)
@@ -167,7 +165,7 @@ void ACommanderPawn::ToFPSMode()
 	if (currController != nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("To FPS Mode"));
-		currController->ChangePlayMode(GetPlayMode());
+		currController->ChangePlayMode(_mode);
 	}
 }
 
@@ -189,18 +187,35 @@ void ACommanderPawn::ToMove()
 	}
 }
 
+void ACommanderPawn::LookAt()
+{
+	APlayerController* controller = Cast<APlayerController>(GetController());
+	if (controller != nullptr)
+	{
+		FHitResult hit;
+		controller->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel3, false, hit);
+		DoIterateToMembers(
+			[](AFPSPawn* pawn)->void
+			{
+				//do nothing
+			},
+			[hit](AFPSAIController* controller)->void
+			{
+				controller->LookAt(hit.Location);
+			});
+	}
+}
+
 void ACommanderPawn::ChangeSquadFireAttitude(EBotFireAttitude attitude)
 {
 	_currentFireAttitude = attitude;
 	DoIterateToMembers(
 		[attitude](AFPSPawn* pawn)->void {
 			ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(pawn->GetController());
-			IFireable* fireable = Cast<IFireable>(controller);
-			fireable->SetFireAttitude(attitude);
+			controller->SetFireAttitude(attitude);
 		},
 		[attitude](AFPSAIController* controller)->void {
-			IFireable* fireable = Cast<IFireable>(controller);
-			fireable->SetFireAttitude(attitude);
+			controller->SetFireAttitude(attitude);
 		});
 }
 

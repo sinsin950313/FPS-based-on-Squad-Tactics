@@ -9,10 +9,8 @@
 #include "ProjectileActor.h"
 
 // Sets default values
-AFPSPawn::AFPSPawn()
+AFPSPawn::AFPSPawn() : _mode(EPlayerMode::FPSMODE)
 {
-	SetPlayMode(EPlayerMode::FPSMODE);
-
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -140,7 +138,7 @@ void AFPSPawn::ToCommandMode()
 	if (currController != nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("To Command Mode"));
-		currController->ChangePlayMode(GetPlayMode());
+		currController->ChangePlayMode(_mode);
 	}
 }
 

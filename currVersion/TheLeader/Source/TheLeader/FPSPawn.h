@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Camera\CameraComponent.h"
-#include "InGamePawn.h"
 #include "FireAttitudeDelegateInterface.h"
 
 #include "CoreMinimal.h"
@@ -11,7 +10,7 @@
 #include "FPSPawn.generated.h"
 
 UCLASS()
-class THELEADER_API AFPSPawn : public ACharacter, public IInGamePawn, public IFireAttitudeDelegateInterface
+class THELEADER_API AFPSPawn : public ACharacter, public IFireAttitudeDelegateInterface
 {
 	GENERATED_BODY()
 
@@ -62,4 +61,7 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 private:
 	int _HP = 100;
+
+private:
+	const EPlayerMode _mode = EPlayerMode::FPSMODE;
 };

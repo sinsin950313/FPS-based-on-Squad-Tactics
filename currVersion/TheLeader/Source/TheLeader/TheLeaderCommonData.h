@@ -12,6 +12,25 @@ enum EBotState
 	FIRE UMETA(DisplayName = "FIRE")
 };
 
+UENUM(BlueprintType)
+enum EBotFireAttitude
+{
+	FIREATWILL UMETA(DisplayName = "FIREATWILL"),
+	HOLDFIRE UMETA(DisplayName = "HOLDFIRE")
+};
+
+enum class ETeam
+{
+	PLAYER,
+	ENEMY
+};
+
+enum class EPlayerMode
+{
+	FPSMODE,
+	COMMODE
+};
+
 class THELEADER_API TheLeaderCommonData
 {
 public:

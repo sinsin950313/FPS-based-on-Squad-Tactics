@@ -3,7 +3,6 @@
 #pragma once
 
 #include "TheLeaderCommonData.h"
-#include "Fireable.h"
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
