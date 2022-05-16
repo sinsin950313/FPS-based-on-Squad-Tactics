@@ -3,10 +3,16 @@
 
 #include "TheLeaderPlayerController.h"
 #include "CommanderPawn.h"
+#include "ControllerBuilder.h"
 
 ATheLeaderPlayerController::ATheLeaderPlayerController()
 {
-	InGameController::Builder().Belonged(EBelonged::PLAYER).Build(this);
+	Init();
+
+	ControllerBuilder::GetInstance()
+		->InitTeam(ETeam::PLAYER)
+		->SharedDataSet(nullptr)
+		->Build(this);
 }
 
 void ATheLeaderPlayerController::BeginPlay()
@@ -20,6 +26,13 @@ void ATheLeaderPlayerController::SetMouseEnable(bool enable)
 {
 	bEnableMouseOverEvents = enable;
 	bShowMouseCursor = enable;
+}
+
+void ATheLeaderPlayerController::Init()
+{
+	_fireAttitude = CreateDefaultSubobject<UFireAttitude>(TEXT("Fire Attitude"));
+	_teamAgent = CreateDefaultSubobject<UGenericTeamAgent>(TEXT("Team Agent"));
+	_squadSharedData = CreateDefaultSubobject<USquadSharedData>(TEXT("Squad Shared Data"));
 }
 
 void ATheLeaderPlayerController::ChangePlayMode(EPlayerMode currPlayState)
@@ -65,4 +78,49 @@ void ATheLeaderPlayerController::ChangePlayMode(EPlayerMode currPlayState)
 	default:
 		break;
 	}
+}
+
+EBotFireAttitude ATheLeaderPlayerController::GetFireAttitude()
+{
+	return _fireAttitude->GetFireAttitude();
+}
+
+void ATheLeaderPlayerController::SetFireAttitude(EBotFireAttitude fireAttitude)
+{
+	_fireAttitude->SetFireAttitude(fireAttitude);
+}
+
+void ATheLeaderPlayerController::SetGenericTeamId(FGenericTeamId TeamID)
+{
+	_teamAgent->SetGenericTeamId(TeamID);
+}
+
+FGenericTeamId ATheLeaderPlayerController::GetGenericTeamId() const
+{
+	return _teamAgent->GetGenericTeamId();
+}
+
+ETeamAttitude::Type ATheLeaderPlayerController::GetTeamAttitudeTowards(const AActor& Other) const
+{
+	return _teamAgent->GetTeamAttitudeTowards(Other);
+}
+
+void ATheLeaderPlayerController::SetSquadSharedData(SquadSharedData* squadSharedData)
+{
+	_squadSharedData->SetSquadSharedData(squadSharedData);
+}
+
+void ATheLeaderPlayerController::Spotted(AFPSPawn* pawn)
+{
+	_squadSharedData->Spotted(pawn);
+}
+
+void ATheLeaderPlayerController::Disapear(AFPSPawn* pawn)
+{
+	_squadSharedData->Disapear(pawn);
+}
+
+bool ATheLeaderPlayerController::HasSpotted(AFPSPawn* target)
+{
+	return _squadSharedData->HasSpotted(target);
 }

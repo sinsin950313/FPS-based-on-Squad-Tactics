@@ -6,6 +6,7 @@
 #include "FPSPawn.h"
 #include "TheLeaderCommonData.h"
 #include "FPSAIController.h"
+#include "SquadSharedData.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/DefaultPawn.h"
@@ -19,6 +20,7 @@ class THELEADER_API ACommanderPawn : public ADefaultPawn
 	// Sets default values for this pawn's properties
 public:
 	ACommanderPawn();
+	~ACommanderPawn();
 	void SetDirection(float yawVal);
 private:
 	UCameraComponent* _cameraComponent;
@@ -62,4 +64,7 @@ private:
 
 private:
 	const EPlayerMode _mode = EPlayerMode::COMMODE;
+
+private:
+	SquadSharedData* _squadSharedData;
 };

@@ -1,11 +1,11 @@
 #include "FireAttitude.h"
 
-EBotFireAttitude FireAttitude::GetFireAttitude()
+EBotFireAttitude UFireAttitude::GetFireAttitude()
 {
-	return _attitude;
+	return _fireAttitude;
 }
 
-void FireAttitude::SetFireAttitude(EBotFireAttitude attitude)
+void UFireAttitude::SetFireAttitude(EBotFireAttitude fireAttitude)
 {
-	_attitude = attitude;
+	_fireAttitude = fireAttitude;
 }

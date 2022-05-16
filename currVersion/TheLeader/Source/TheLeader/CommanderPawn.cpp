@@ -26,6 +26,13 @@ ACommanderPawn::ACommanderPawn() : _mode(EPlayerMode::COMMODE)
 	_cameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
 	_cameraComponent->SetupAttachment(RootComponent);
 	_cameraComponent->SetRelativeRotation(FRotator(-30.0f, 0.0f, 0.0f));
+
+	_squadSharedData = new SquadSharedData();
+}
+
+ACommanderPawn::~ACommanderPawn()
+{
+	delete _squadSharedData;
 }
 
 void ACommanderPawn::SetDirection(float yawVal)
@@ -54,7 +61,10 @@ void ACommanderPawn::CreateMember(FVector relativeLocation)
 	member->FireAttitudeDelegate.BindUFunction(controller, FName("SetFireAttitude"));
 	_squadMembers.Add(Cast<AFPSAIController>(member->GetController()));
 
-	InGameController::Builder().Belonged(EBelonged::PLAYER).Build(controller);
+	ControllerBuilder::GetInstance()
+		->InitTeam(ETeam::PLAYER)
+		->SharedDataSet(_squadSharedData)
+		->Build(controller);
 }
 
 template<typename ToLeader, typename ToMembers>

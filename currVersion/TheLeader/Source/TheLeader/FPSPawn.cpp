@@ -34,6 +34,10 @@ AFPSPawn::AFPSPawn() : _mode(EPlayerMode::FPSMODE)
 	}
 
 	_lastAttackTime = _coolTime;
+
+	//I think character has default sight
+	//_stimuliComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliComponent"));
+	//_stimuliComponent->RegisterForSense(UAISense_Sight::StaticClass());
 }
 
 // Called when the game starts or when spawned

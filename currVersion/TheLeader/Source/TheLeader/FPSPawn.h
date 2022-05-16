@@ -4,6 +4,7 @@
 
 #include "Camera\CameraComponent.h"
 #include "FireAttitudeDelegateInterface.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h" 
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -65,7 +66,7 @@ private:
 private:
 	const EPlayerMode _mode = EPlayerMode::FPSMODE;
 
-public:
-	UPROPERTY(EditAnywhere)
-	EBelonged belong;
+private:
+	//UPROPERTY(EditAnywhere)
+	//UAIPerceptionStimuliSourceComponent* _stimuliComponent;
 };
