@@ -127,12 +127,12 @@ void AFPSAIController::SetSquadSharedData(SquadSharedData* squadSharedData)
 	_squadSharedData->SetSquadSharedData(squadSharedData);
 }
 
-void AFPSAIController::Spotted(AFPSPawn* pawn)
+void AFPSAIController::SpottingEnemy(AFPSPawn* pawn)
 {
-	_squadSharedData->Spotted(pawn);
+	_squadSharedData->Spotting(pawn);
 }
 
-void AFPSAIController::Disapear(AFPSPawn* pawn)
+void AFPSAIController::DisapearEnemy(AFPSPawn* pawn)
 {
 	_squadSharedData->Disapear(pawn);
 }
@@ -149,7 +149,7 @@ void AFPSAIController::Findable(AActor* Actor, FAIStimulus Stimulus)
 		AFPSPawn* target = Cast<AFPSPawn>(Actor);
 		if (Stimulus.WasSuccessfullySensed())
 		{
-			_squadSharedData->Spotted(target);
+			_squadSharedData->Spotting(target);
 		}
 		else
 		{

@@ -3,6 +3,7 @@
 
 #include "GenericTeamAgent.h"
 #include "FPSPawn.h"
+#include "InGameControllerInterface.h"
 
 void UGenericTeamAgent::SetGenericTeamId(const FGenericTeamId& TeamID)
 {
@@ -19,7 +20,7 @@ ETeamAttitude::Type UGenericTeamAgent::GetTeamAttitudeTowards(const AActor& Othe
 	const AFPSPawn* pawn = Cast<const AFPSPawn>(&Other);
 	if (pawn != nullptr)
 	{
-		const IGenericTeamAgentInterface* teamInterface = Cast<const IGenericTeamAgentInterface>(pawn->GetController());
+		const IInGameControllerInterface* teamInterface = Cast<const IInGameControllerInterface>(pawn->GetController());
 		if (teamInterface != nullptr)
 		{
 			if (teamInterface->GetGenericTeamId() == ETeam::NEUTRAL)

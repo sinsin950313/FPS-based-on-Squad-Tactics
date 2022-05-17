@@ -32,7 +32,7 @@ private:
 	TArray<TWeakObjectPtr<AFPSPawn>> _spotted;
 public:
 	void SetSquadSharedData(SquadSharedData* squadSharedData);
-	void Spotted(AFPSPawn* pawn);
+	void Spotting(AFPSPawn* pawn);
 	void Disapear(AFPSPawn* pawn);
 	bool HasSpotted(AFPSPawn* target);
 };

@@ -88,6 +88,7 @@ AFPSPawn* ACommanderPawn::GetLeader()
 		AFPSAIController* controller = *_squadMembers.begin();
 		_currentLeader = Cast<AFPSPawn>(controller->GetPawn());
 		_squadMembers.Remove(controller);
+		controller->Destroy();
 	}
 	return _currentLeader;
 }

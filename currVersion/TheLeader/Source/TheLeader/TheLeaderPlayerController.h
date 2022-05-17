@@ -7,6 +7,8 @@
 #include "FPSPawn.h"
 #include "GenericTeamAgent.h"
 #include "FireAttitude.h"
+#include "PlayerSensingAIController.h"
+#include "PlayerSensorPawn.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -25,6 +27,8 @@ public:
 
 public:
 	void ChangePlayMode(EPlayerMode currPlayState);
+protected:
+	virtual void OnPossess(APawn* InPawn) override;
 
 protected:
 	void BeginPlay() override;
@@ -52,7 +56,7 @@ private:
 	UGenericTeamAgent* _teamAgent;
 public:
 	virtual void SetGenericTeamId(FGenericTeamId team) override;
-	virtual FGenericTeamId GetGenericTeamId() const;
+	virtual FGenericTeamId GetGenericTeamId() const override;
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const;
 	
 private:
@@ -60,7 +64,13 @@ private:
 	USquadSharedData* _squadSharedData;
 public:
 	virtual void SetSquadSharedData(SquadSharedData* squadSharedData) override;
-	void Spotted(AFPSPawn* pawn);
-	void Disapear(AFPSPawn* pawn);
+	UFUNCTION()
+	void SpottingEnemy(AFPSPawn* targetPawn);
+	UFUNCTION()
+	void DisapearEnemy(AFPSPawn* targetPawn);
 	bool HasSpotted(AFPSPawn* target);
+
+private:
+	UPROPERTY(EditAnywhere)
+		APlayerSensorPawn* _playerSensingPawn;
 };

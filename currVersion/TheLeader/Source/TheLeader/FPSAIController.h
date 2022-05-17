@@ -75,8 +75,8 @@ private:
 	USquadSharedData* _squadSharedData;
 public:
 	virtual void SetSquadSharedData(SquadSharedData* squadSharedData) override;
-	void Spotted(AFPSPawn* pawn);
-	void Disapear(AFPSPawn* pawn);
+	void SpottingEnemy(AFPSPawn* pawn);
+	void DisapearEnemy(AFPSPawn* pawn);
 	bool HasSpotted(AFPSPawn* target);
 
 public:

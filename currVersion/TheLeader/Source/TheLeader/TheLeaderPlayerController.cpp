@@ -80,6 +80,27 @@ void ATheLeaderPlayerController::ChangePlayMode(EPlayerMode currPlayState)
 	}
 }
 
+void ATheLeaderPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+		UE_LOG(LogTemp, Log, TEXT("Possess 0"));
+	if (_playerSensingPawn == nullptr)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Possess 1"));
+		_playerSensingPawn = GetWorld()->SpawnActor<APlayerSensorPawn>();
+
+		APlayerSensingAIController* sensingAIController = Cast<APlayerSensingAIController>(_playerSensingPawn->GetController());
+		sensingAIController->FindEnemy.BindUFunction(this, TEXT("SpottingEnemy"));
+		sensingAIController->DisapearEnemy.BindUFunction(this, TEXT("DisapearEnemy"));
+	}
+
+	if (Cast<AFPSPawn>(InPawn) != nullptr)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Possess 2"));
+		_playerSensingPawn->AttachToActor(InPawn, FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true));
+	}
+}
+
 EBotFireAttitude ATheLeaderPlayerController::GetFireAttitude()
 {
 	return _fireAttitude->GetFireAttitude();
@@ -110,14 +131,16 @@ void ATheLeaderPlayerController::SetSquadSharedData(SquadSharedData* squadShared
 	_squadSharedData->SetSquadSharedData(squadSharedData);
 }
 
-void ATheLeaderPlayerController::Spotted(AFPSPawn* pawn)
+void ATheLeaderPlayerController::SpottingEnemy(AFPSPawn* targetPawn)
 {
-	_squadSharedData->Spotted(pawn);
+	UE_LOG(LogTemp, Log, TEXT("Spotting"));
+	_squadSharedData->Spotting(targetPawn);
 }
 
-void ATheLeaderPlayerController::Disapear(AFPSPawn* pawn)
+void ATheLeaderPlayerController::DisapearEnemy(AFPSPawn* targetPawn)
 {
-	_squadSharedData->Disapear(pawn);
+	UE_LOG(LogTemp, Log, TEXT("Disapear"));
+	_squadSharedData->Disapear(targetPawn);
 }
 
 bool ATheLeaderPlayerController::HasSpotted(AFPSPawn* target)

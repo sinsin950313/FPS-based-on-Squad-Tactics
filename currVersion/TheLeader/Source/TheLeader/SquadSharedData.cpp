@@ -33,7 +33,7 @@ void USquadSharedData::SetSquadSharedData(SquadSharedData* squadSharedData)
 	_pSquadSharedData = squadSharedData;
 }
 
-void USquadSharedData::Spotted(AFPSPawn* pawn)
+void USquadSharedData::Spotting(AFPSPawn* pawn)
 {
 	if (_pSquadSharedData != nullptr)
 	{

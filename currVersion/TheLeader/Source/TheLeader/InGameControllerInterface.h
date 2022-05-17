@@ -30,6 +30,7 @@ public:
 
 public:
 	virtual void SetGenericTeamId(FGenericTeamId team) = 0;
+	virtual FGenericTeamId GetGenericTeamId() const = 0;
 
 public:
 	UFUNCTION()
