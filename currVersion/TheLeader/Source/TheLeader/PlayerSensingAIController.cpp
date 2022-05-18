@@ -32,23 +32,27 @@ void APlayerSensingAIController::SetSenseConfig()
 
 void APlayerSensingAIController::Findable(AActor* Actor, FAIStimulus Stimulus)
 {
-	UE_LOG(LogTemp, Log, TEXT("AAA"));
 	if (Cast<AFPSPawn>(Actor) != nullptr)
 	{
 		AFPSPawn* target = Cast<AFPSPawn>(Actor);
 		if (Stimulus.WasSuccessfullySensed())
 		{
-			FindEnemy.Execute(target);
+			if (FindEnemyDelegate.IsBound())
+			{
+				FindEnemyDelegate.Execute(target);
+			}
 		}
 		else
 		{
-			DisapearEnemy.Execute(target);
+			if (DisapearEnemyDelegate.IsBound())
+			{
+				DisapearEnemyDelegate.Execute(target);
+			}
 		}
 	}
 }
 
 ETeamAttitude::Type APlayerSensingAIController::GetTeamAttitudeTowards(const AActor& Other) const
 {
-	//brute force
-	return ETeamAttitude::Hostile;
+	return TeamAttitudeDelegate.IsBound() ? TeamAttitudeDelegate.Execute(&Other) : ETeamAttitude::Neutral;
 }

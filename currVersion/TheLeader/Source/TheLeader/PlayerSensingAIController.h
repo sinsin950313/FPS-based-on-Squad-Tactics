@@ -10,6 +10,7 @@
 #include "PlayerSensingAIController.generated.h"
 
 DECLARE_DELEGATE_OneParam(FRegisterDelegate, AFPSPawn*);
+DECLARE_DELEGATE_RetVal_OneParam(ETeamAttitude::Type, FAttitudeDelegate, const AActor*);
 
 /**
  * 
@@ -29,7 +30,10 @@ private:
 public:
 	UFUNCTION()
 	void Findable(AActor* Actor, FAIStimulus Stimulus);
-	FRegisterDelegate FindEnemy;
-	FRegisterDelegate DisapearEnemy;
+	FRegisterDelegate FindEnemyDelegate;
+	FRegisterDelegate DisapearEnemyDelegate;
+
+public:
 	ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
+	FAttitudeDelegate TeamAttitudeDelegate;
 };

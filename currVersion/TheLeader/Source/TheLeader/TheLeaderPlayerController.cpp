@@ -88,8 +88,9 @@ void ATheLeaderPlayerController::OnPossess(APawn* InPawn)
 		_playerSensingPawn = GetWorld()->SpawnActor<APlayerSensorPawn>();
 
 		APlayerSensingAIController* sensingAIController = Cast<APlayerSensingAIController>(_playerSensingPawn->GetController());
-		sensingAIController->FindEnemy.BindUFunction(this, TEXT("SpottingEnemy"));
-		sensingAIController->DisapearEnemy.BindUFunction(this, TEXT("DisapearEnemy"));
+		sensingAIController->FindEnemyDelegate.BindUFunction(this, TEXT("SpottingEnemy"));
+		sensingAIController->DisapearEnemyDelegate.BindUFunction(this, TEXT("DisapearEnemy"));
+		sensingAIController->TeamAttitudeDelegate.BindUFunction(this, TEXT("GetTeamAttitudeTowards"));
 	}
 
 	if (Cast<AFPSPawn>(InPawn) != nullptr)
@@ -118,9 +119,9 @@ FGenericTeamId ATheLeaderPlayerController::GetGenericTeamId() const
 	return _teamAgent->GetGenericTeamId();
 }
 
-ETeamAttitude::Type ATheLeaderPlayerController::GetTeamAttitudeTowards(const AActor& Other) const
+ETeamAttitude::Type ATheLeaderPlayerController::GetTeamAttitudeTowards(const AActor* Other) const
 {
-	return _teamAgent->GetTeamAttitudeTowards(Other);
+	return _teamAgent->GetTeamAttitudeTowards(*Other);
 }
 
 void ATheLeaderPlayerController::SetSquadSharedData(SquadSharedData* squadSharedData)
@@ -130,13 +131,11 @@ void ATheLeaderPlayerController::SetSquadSharedData(SquadSharedData* squadShared
 
 void ATheLeaderPlayerController::SpottingEnemy(AFPSPawn* targetPawn)
 {
-	UE_LOG(LogTemp, Log, TEXT("Spotting"));
 	_squadSharedData->Spotting(targetPawn);
 }
 
 void ATheLeaderPlayerController::DisapearEnemy(AFPSPawn* targetPawn)
 {
-	UE_LOG(LogTemp, Log, TEXT("Disapear"));
 	_squadSharedData->Disapear(targetPawn);
 }
 

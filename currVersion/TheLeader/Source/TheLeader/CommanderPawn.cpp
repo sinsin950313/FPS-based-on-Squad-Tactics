@@ -178,7 +178,6 @@ void ACommanderPawn::ToFPSMode()
 	ATheLeaderPlayerController* currController = Cast<ATheLeaderPlayerController>(GetController());
 	if (currController != nullptr)
 	{
-		UE_LOG(LogTemp, Log, TEXT("To FPS Mode"));
 		currController->ChangePlayMode(_mode);
 	}
 }

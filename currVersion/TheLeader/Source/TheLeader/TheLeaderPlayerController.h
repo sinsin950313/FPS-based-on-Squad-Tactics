@@ -57,7 +57,8 @@ private:
 public:
 	virtual void SetGenericTeamId(FGenericTeamId team) override;
 	virtual FGenericTeamId GetGenericTeamId() const override;
-	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const;
+	UFUNCTION()
+	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor* Other) const;
 	
 private:
 	UPROPERTY()
@@ -71,6 +72,6 @@ public:
 	bool HasSpotted(AFPSPawn* target);
 
 private:
-	UPROPERTY(EditAnywhere)
-		APlayerSensorPawn* _playerSensingPawn;
+	UPROPERTY()
+	APlayerSensorPawn* _playerSensingPawn;
 };
