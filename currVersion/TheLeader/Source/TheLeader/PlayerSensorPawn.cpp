@@ -12,13 +12,13 @@ APlayerSensorPawn::APlayerSensorPawn()
 
 	AIControllerClass = APlayerSensingAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	
+	USceneComponent* sceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	RootComponent = sceneComponent;
 }
 
 // Called when the game starts or when spawned
 void APlayerSensorPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	USceneComponent* sceneComponent = NewObject<USceneComponent>(this);
-	RootComponent = sceneComponent;
 }
