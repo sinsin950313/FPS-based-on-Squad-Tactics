@@ -5,6 +5,7 @@
 #include "GenericTeamAgentInterface.h"
 #include "TheLeaderCommonData.h"
 #include "SquadSharedData.h"
+#include "Perception/AIPerceptionComponent.h" 
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"

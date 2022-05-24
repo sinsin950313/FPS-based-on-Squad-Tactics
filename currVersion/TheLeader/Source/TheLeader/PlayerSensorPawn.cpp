@@ -22,3 +22,27 @@ void APlayerSensorPawn::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+void APlayerSensorPawn::SetDefaultSensor()
+{
+	APlayerSensingAIController* controller = Cast<APlayerSensingAIController>(GetController());
+	controller->SetDefaultSensor();
+}
+
+void APlayerSensorPawn::SetSightConfig(AFPSPawn* pawn)
+{
+	APlayerSensingAIController* controller = Cast<APlayerSensingAIController>(GetController());
+	controller->SetSightConfig(pawn);
+}
+
+void APlayerSensorPawn::SetSquadSharedData(SquadSharedData* squadSharedData)
+{
+	APlayerSensingAIController* controller = Cast<APlayerSensingAIController>(GetController());
+	controller->SetSquadSharedData(squadSharedData);
+}
+
+void APlayerSensorPawn::SetTeam(UGenericTeamAgent* teamAgent)
+{
+	APlayerSensingAIController* controller = Cast<APlayerSensingAIController>(GetController());
+	controller->SetTeam(teamAgent);
+}

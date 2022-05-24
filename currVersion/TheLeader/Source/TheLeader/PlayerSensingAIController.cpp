@@ -6,53 +6,54 @@
 
 APlayerSensingAIController::APlayerSensingAIController()
 {
-	SetSenseConfig();
+	SetGenericTeamId(FGenericTeamId(ETeam::PLAYER));
+
+	_sensingUpdater = CreateDefaultSubobject<UAISensingUpdater>(TEXT("Sensing Updater"));
+	AISensorManager::GetInstance()->SetDefaultSense(this);
 }
 
-void APlayerSensingAIController::SetSenseConfig()
+void APlayerSensingAIController::SetDefaultSensor()
 {
-	SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent")));
-
-	_senseConfigSight = CreateOptionalDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
-	_senseConfigSight->SightRadius = 300;
-	_senseConfigSight->LoseSightRadius = 600;
-	_senseConfigSight->PeripheralVisionAngleDegrees = 90;
-	_senseConfigSight->DetectionByAffiliation.bDetectEnemies = true;
-	_senseConfigSight->DetectionByAffiliation.bDetectFriendlies = false;
-	_senseConfigSight->DetectionByAffiliation.bDetectNeutrals = false;
-	_senseConfigSight->SetMaxAge(10);
-	GetPerceptionComponent()->ConfigureSense(*_senseConfigSight);
-
-	GetPerceptionComponent()->SetDominantSense(*_senseConfigSight->GetSenseImplementation());
-
-	SetGenericTeamId(FGenericTeamId(2));
-
-	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &APlayerSensingAIController::Findable);
+	AISensorManager::GetInstance()->SetDefaultSense(this);
 }
 
-void APlayerSensingAIController::Findable(AActor* Actor, FAIStimulus Stimulus)
+void APlayerSensingAIController::SetSightConfig(AFPSPawn* pawn)
 {
-	if (Cast<AFPSPawn>(Actor) != nullptr)
-	{
-		AFPSPawn* target = Cast<AFPSPawn>(Actor);
-		if (Stimulus.WasSuccessfullySensed())
-		{
-			if (FindEnemyDelegate.IsBound())
-			{
-				FindEnemyDelegate.Execute(target);
-			}
-		}
-		else
-		{
-			if (DisapearEnemyDelegate.IsBound())
-			{
-				DisapearEnemyDelegate.Execute(target);
-			}
-		}
-	}
+	AISensorManager::GetInstance()->SetSightConfig(GetPerceptionComponent());
+}
+
+void APlayerSensingAIController::SetSquadSharedData(SquadSharedData* squadSharedData)
+{
+	_squadSharedData->SetSquadSharedData(squadSharedData);
+	_sensingUpdater->SetSquadSharedData(squadSharedData);
+}
+
+void APlayerSensingAIController::SpottingEnemy(AFPSPawn* targetPawn)
+{
+	_squadSharedData->Spotting(targetPawn);
+}
+
+void APlayerSensingAIController::DisapearEnemy(AFPSPawn* targetPawn)
+{
+	_squadSharedData->Disapear(targetPawn);
+}
+
+bool APlayerSensingAIController::HasSpotted(AFPSPawn* target)
+{
+	return _squadSharedData->HasSpotted(target);
+}
+
+void APlayerSensingAIController::SetTeam(UGenericTeamAgent* team)
+{
+	_teamAgent = team;
 }
 
 ETeamAttitude::Type APlayerSensingAIController::GetTeamAttitudeTowards(const AActor& Other) const
 {
-	return TeamAttitudeDelegate.IsBound() ? TeamAttitudeDelegate.Execute(&Other) : ETeamAttitude::Neutral;
+	return _teamAgent->GetTeamAttitudeTowards(Other);
+}
+
+UAISensingUpdater* APlayerSensingAIController::GetSensingUpdater()
+{
+	return _sensingUpdater;
 }

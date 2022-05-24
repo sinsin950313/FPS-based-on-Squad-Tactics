@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include "GenericTeamAgent.h"
+#include "SquadSharedData.h"
+#include "FPSPawn.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerSensorPawn.generated.h"
@@ -18,4 +22,14 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+public:
+	void SetDefaultSensor();
+	void SetSightConfig(AFPSPawn* pawn);
+
+public:
+	void SetSquadSharedData(SquadSharedData* squadSharedData);
+
+public:
+	void SetTeam(UGenericTeamAgent* teamAgent);
 };

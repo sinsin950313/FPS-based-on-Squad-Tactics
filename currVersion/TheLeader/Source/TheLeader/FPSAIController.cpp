@@ -4,6 +4,7 @@
 #include "FPSAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "FPSPawn.h"
+#include "AISensorManager.h"
 
 const FName AFPSAIController::kDestination(TEXT("Destination"));
 const FName AFPSAIController::kState(TEXT("State"));
@@ -26,7 +27,10 @@ AFPSAIController::AFPSAIController()
 
 	Init();
 
-	SetSenseConfig();
+	_sensingUpdater = CreateDefaultSubobject<UAISensingUpdater>(TEXT("Sensing Updater"));
+	AISensorManager::GetInstance()->SetDefaultSense(this);
+
+	SetGenericTeamId(FGenericTeamId(ETeam::ENEMY));
 
 	ControllerBuilder::GetInstance()
 		->InitTeam(ETeam::ENEMY)
@@ -34,30 +38,11 @@ AFPSAIController::AFPSAIController()
 		->Build(this);
 }
 
-void AFPSAIController::SetSenseConfig()
-{
-	SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent")));
-
-	_senseConfigSight = CreateOptionalDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
-	_senseConfigSight->SightRadius = 300;
-	_senseConfigSight->LoseSightRadius = 600;
-	_senseConfigSight->PeripheralVisionAngleDegrees = 90;
-	_senseConfigSight->DetectionByAffiliation.bDetectEnemies = true;
-	_senseConfigSight->DetectionByAffiliation.bDetectFriendlies = false;
-	_senseConfigSight->DetectionByAffiliation.bDetectNeutrals = false;
-	_senseConfigSight->SetMaxAge(10);
-	GetPerceptionComponent()->ConfigureSense(*_senseConfigSight);
-
-	GetPerceptionComponent()->SetDominantSense(*_senseConfigSight->GetSenseImplementation());
-
-	SetGenericTeamId(FGenericTeamId(1));
-
-	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AFPSAIController::Findable);
-}
-
 void AFPSAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+
+	AISensorManager::GetInstance()->SetSightConfig(GetPerceptionComponent());
 
 	if (UseBlackboard(_BBAsset, Blackboard))
 	{
@@ -125,6 +110,7 @@ ETeamAttitude::Type AFPSAIController::GetTeamAttitudeTowards(const AActor& Other
 void AFPSAIController::SetSquadSharedData(SquadSharedData* squadSharedData)
 {
 	_squadSharedData->SetSquadSharedData(squadSharedData);
+	_sensingUpdater->SetSquadSharedData(squadSharedData);
 }
 
 void AFPSAIController::SpottingEnemy(AFPSPawn* pawn)
@@ -142,18 +128,17 @@ bool AFPSAIController::HasSpotted(AFPSPawn* pawn)
 	return _squadSharedData->HasSpotted(pawn);
 }
 
-void AFPSAIController::Findable(AActor* Actor, FAIStimulus Stimulus)
+void AFPSAIController::SetDefaultSensor()
 {
-	if (Cast<AFPSPawn>(Actor) != nullptr)
-	{
-		AFPSPawn* target = Cast<AFPSPawn>(Actor);
-		if (Stimulus.WasSuccessfullySensed())
-		{
-			_squadSharedData->Spotting(target);
-		}
-		else
-		{
-			_squadSharedData->Disapear(target);
-		}
-	}
+	AISensorManager::GetInstance()->SetDefaultSense(this);
+}
+
+void AFPSAIController::SetSightConfig(AFPSPawn* pawn)
+{
+	AISensorManager::GetInstance()->SetSightConfig(GetPerceptionComponent());
+}
+
+UAISensingUpdater* AFPSAIController::GetSensingUpdater()
+{
+	return _sensingUpdater;
 }

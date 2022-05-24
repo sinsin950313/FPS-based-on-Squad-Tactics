@@ -10,6 +10,8 @@
 #include "FireAttitude.h"
 #include "SquadSharedData.h"
 #include "GenericTeamAgent.h"
+#include "AISensorInterface.h"
+#include "AISensingUpdater.h"
 
 #include "CoreMinimal.h"
 #include "AIController.h"
@@ -19,7 +21,7 @@
  * 
  */
 UCLASS()
-class THELEADER_API AFPSAIController : public AAIController, public IInGameControllerInterface
+class THELEADER_API AFPSAIController : public AAIController, public IInGameControllerInterface, public IAISensorInterface
 {
 	GENERATED_BODY()
 	
@@ -49,10 +51,6 @@ public:
 	void LookAt(FVector that);
 
 private:
-	UAISenseConfig_Sight* _senseConfigSight;
-	void SetSenseConfig();
-
-private:
 	virtual void Init() override;
 
 private:
@@ -79,7 +77,12 @@ public:
 	void DisapearEnemy(AFPSPawn* pawn);
 	bool HasSpotted(AFPSPawn* target);
 
+private:
+	virtual void SetDefaultSensor() override;
+	virtual void SetSightConfig(AFPSPawn* pawn) override;
+
+private:
+	UAISensingUpdater* _sensingUpdater;
 public:
-	UFUNCTION()
-	void Findable(AActor* Actor, FAIStimulus Stimulus);
+	virtual UAISensingUpdater* GetSensingUpdater() override;
 };

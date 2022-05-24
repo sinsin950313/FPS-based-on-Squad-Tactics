@@ -5,7 +5,10 @@ ControllerBuilder* ControllerBuilder::_instance = nullptr;
 ControllerBuilder* ControllerBuilder::GetInstance()
 {
 	if (_instance == nullptr)
+	{
 		_instance = new ControllerBuilder();
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Controller Builder have to change from Singleton to GameInstance"));
 	return _instance;
 }
 

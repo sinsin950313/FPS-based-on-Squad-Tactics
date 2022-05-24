@@ -20,6 +20,10 @@ void ATheLeaderPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	_commandModePawn = Cast<ACommanderPawn>(GetPawn());
+
+	_playerSensingPawn = GetWorld()->SpawnActor<APlayerSensorPawn>();
+	_playerSensingPawn->SetDefaultSensor();
+	_playerSensingPawn->SetTeam(_teamAgent);
 }
 
 void ATheLeaderPlayerController::SetMouseEnable(bool enable)
@@ -83,19 +87,13 @@ void ATheLeaderPlayerController::ChangePlayMode(EPlayerMode currPlayState)
 void ATheLeaderPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	if (_playerSensingPawn == nullptr)
-	{
-		_playerSensingPawn = GetWorld()->SpawnActor<APlayerSensorPawn>();
 
-		APlayerSensingAIController* sensingAIController = Cast<APlayerSensingAIController>(_playerSensingPawn->GetController());
-		sensingAIController->FindEnemyDelegate.BindUFunction(this, TEXT("SpottingEnemy"));
-		sensingAIController->DisapearEnemyDelegate.BindUFunction(this, TEXT("DisapearEnemy"));
-		sensingAIController->TeamAttitudeDelegate.BindUFunction(this, TEXT("GetTeamAttitudeTowards"));
-	}
-
-	if (Cast<AFPSPawn>(InPawn) != nullptr)
+	//What happen if pawn dead??
+	AFPSPawn* possessPawn = Cast<AFPSPawn>(InPawn);
+	if (possessPawn != nullptr)
 	{
-		_playerSensingPawn->AttachToActor(InPawn, FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true));
+		_playerSensingPawn->AttachToActor(possessPawn, FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true));
+		_playerSensingPawn->SetSightConfig(possessPawn);
 	}
 }
 
@@ -127,19 +125,8 @@ ETeamAttitude::Type ATheLeaderPlayerController::GetTeamAttitudeTowards(const AAc
 void ATheLeaderPlayerController::SetSquadSharedData(SquadSharedData* squadSharedData)
 {
 	_squadSharedData->SetSquadSharedData(squadSharedData);
-}
-
-void ATheLeaderPlayerController::SpottingEnemy(AFPSPawn* targetPawn)
-{
-	_squadSharedData->Spotting(targetPawn);
-}
-
-void ATheLeaderPlayerController::DisapearEnemy(AFPSPawn* targetPawn)
-{
-	_squadSharedData->Disapear(targetPawn);
-}
-
-bool ATheLeaderPlayerController::HasSpotted(AFPSPawn* target)
-{
-	return _squadSharedData->HasSpotted(target);
+	if (_playerSensingPawn != nullptr)
+	{
+		_playerSensingPawn->SetSquadSharedData(squadSharedData);
+	}
 }

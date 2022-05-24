@@ -9,6 +9,7 @@
 #include "FireAttitude.h"
 #include "PlayerSensingAIController.h"
 #include "PlayerSensorPawn.h"
+#include "AISensorInterface.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -65,11 +66,6 @@ private:
 	USquadSharedData* _squadSharedData;
 public:
 	virtual void SetSquadSharedData(SquadSharedData* squadSharedData) override;
-	UFUNCTION()
-	void SpottingEnemy(AFPSPawn* targetPawn);
-	UFUNCTION()
-	void DisapearEnemy(AFPSPawn* targetPawn);
-	bool HasSpotted(AFPSPawn* target);
 
 private:
 	UPROPERTY()
