@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Camera\CameraComponent.h"
-#include "FireAttitudeDelegateInterface.h"
+#include "Interface/FireAttitudeDelegateInterface.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h" 
 
 #include "CoreMinimal.h"

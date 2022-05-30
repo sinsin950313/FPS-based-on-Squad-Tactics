@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_MoveTo.h"
-#include "AI_BTTask_MoveTo.generated.h"
+#include "BT_Task_MoveTo.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class THELEADER_API UAI_BTTask_MoveTo : public UBTTask_MoveTo
+class THELEADER_API UBT_Task_MoveTo : public UBTTask_MoveTo
 {
 	GENERATED_BODY()
 	

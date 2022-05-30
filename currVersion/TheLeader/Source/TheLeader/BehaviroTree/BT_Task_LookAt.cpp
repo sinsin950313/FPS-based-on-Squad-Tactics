@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AI_BTTask_LookAt.h"
+#include "BT_Task_LookAt.h"
 #include "BehaviorTree/BlackboardComponent.h" 
-#include "FPSAIController.h"
-#include "FPSPawn.h"
+#include "../FPSAIController.h"
+#include "../FPSPawn.h"
 
-UAI_BTTask_LookAt::UAI_BTTask_LookAt()
+UBT_Task_LookAt::UBT_Task_LookAt()
 {
 	NodeName = TEXT("LookAt");
 }
 
-EBTNodeResult::Type UAI_BTTask_LookAt::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UBT_Task_LookAt::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	EBTNodeResult::Type result = Super::ExecuteTask(OwnerComp, NodeMemory);
 

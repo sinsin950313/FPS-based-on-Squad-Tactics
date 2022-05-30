@@ -9,7 +9,7 @@
 #include "FireAttitude.h"
 #include "PlayerSensingAIController.h"
 #include "PlayerSensorPawn.h"
-#include "AISensorInterface.h"
+#include "Interface/AISensorInterface.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"

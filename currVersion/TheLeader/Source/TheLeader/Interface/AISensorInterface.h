@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "FPSPawn.h"
-#include "AISensingUpdater.h"
+#include "../FPSPawn.h"
+#include "../AISensingUpdater.h"
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"

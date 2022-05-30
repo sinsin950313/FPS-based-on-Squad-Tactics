@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "AI_BTTask_LookAt.generated.h"
+#include "BT_Task_LookAt.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class THELEADER_API UAI_BTTask_LookAt : public UBTTaskNode
+class THELEADER_API UBT_Task_LookAt : public UBTTaskNode
 {
 	GENERATED_BODY()
 public:
-	UAI_BTTask_LookAt();
+	UBT_Task_LookAt();
 
 private:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;

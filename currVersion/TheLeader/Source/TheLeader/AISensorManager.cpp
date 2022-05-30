@@ -1,6 +1,6 @@
 #include "AISensorManager.h"
 #include "Perception/AISenseConfig_Sight.h" 
-#include "AISensorInterface.h"
+#include "Interface/AISensorInterface.h"
 
 AISensorManager* AISensorManager::_sensorManager = nullptr;
 

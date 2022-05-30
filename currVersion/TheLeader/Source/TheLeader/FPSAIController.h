@@ -10,7 +10,7 @@
 #include "FireAttitude.h"
 #include "SquadSharedData.h"
 #include "GenericTeamAgent.h"
-#include "AISensorInterface.h"
+#include "Interface/AISensorInterface.h"
 #include "AISensingUpdater.h"
 
 #include "CoreMinimal.h"

@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTService.h"
-#include "FPSPawnStateCheckBTService.generated.h"
+#include "BT_Service_FPSPawnStateCheck.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class THELEADER_API UFPSPawnStateCheckBTService : public UBTService
+class THELEADER_API UBT_Service_FPSPawnStateCheck : public UBTService
 {
 	GENERATED_BODY()
 
 public:
-	UFPSPawnStateCheckBTService();
+	UBT_Service_FPSPawnStateCheck();
 
 protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;

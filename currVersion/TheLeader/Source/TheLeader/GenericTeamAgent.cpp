@@ -3,7 +3,7 @@
 
 #include "GenericTeamAgent.h"
 #include "FPSPawn.h"
-#include "InGameControllerInterface.h"
+#include "Interface/InGameControllerInterface.h"
 
 void UGenericTeamAgent::SetGenericTeamId(const FGenericTeamId& TeamID)
 {

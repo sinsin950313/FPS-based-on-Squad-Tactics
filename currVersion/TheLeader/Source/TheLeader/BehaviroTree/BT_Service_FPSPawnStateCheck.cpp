@@ -1,19 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "FPSPawnStateCheckBTService.h"
-#include "FPSPawn.h"
-#include "FPSAIController.h"
-#include "TheLeaderCommonData.h"
+#include "BT_Service_FPSPawnStateCheck.h"
+#include "../FPSPawn.h"
+#include "../FPSAIController.h"
+#include "../TheLeaderCommonData.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-UFPSPawnStateCheckBTService::UFPSPawnStateCheckBTService()
+UBT_Service_FPSPawnStateCheck::UBT_Service_FPSPawnStateCheck()
 {
 	NodeName = TEXT("Pawn State Check");
 	Interval = 1.0f;
 }
 
-void UFPSPawnStateCheckBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+void UBT_Service_FPSPawnStateCheck::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 

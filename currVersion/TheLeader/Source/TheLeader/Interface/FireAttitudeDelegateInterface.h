@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "TheLeaderCommonData.h"
+#include "../TheLeaderCommonData.h"
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"

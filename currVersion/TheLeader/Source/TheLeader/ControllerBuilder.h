@@ -1,6 +1,6 @@
 #pragma once
 
-#include "InGameControllerInterface.h"
+#include "Interface/InGameControllerInterface.h"
 
 class ControllerBuilder
 {

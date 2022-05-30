@@ -3,8 +3,8 @@
 #pragma once
 
 #include "GenericTeamAgentInterface.h"
-#include "TheLeaderCommonData.h"
-#include "SquadSharedData.h"
+#include "../TheLeaderCommonData.h"
+#include "../SquadSharedData.h"
 #include "Perception/AIPerceptionComponent.h" 
 
 #include "CoreMinimal.h"

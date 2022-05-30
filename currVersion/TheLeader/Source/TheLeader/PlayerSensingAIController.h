@@ -5,7 +5,7 @@
 #include "Perception/AISenseConfig_Sight.h" 
 #include "FPSPawn.h"
 #include "SquadSharedData.h"
-#include "AISensorInterface.h"
+#include "Interface/AISensorInterface.h"
 #include "AISensorManager.h"
 #include "GenericTeamAgent.h"
 #include "AISensingUpdater.h"
