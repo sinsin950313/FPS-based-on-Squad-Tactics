@@ -23,48 +23,69 @@ void SquadSharedData::Disapear(AFPSPawn* pawn)
 	}
 }
 
-bool SquadSharedData::HasSpotted(AFPSPawn* target)
+bool SquadSharedData::IsSpotted(AFPSPawn* target)
 {
 	return _spotted.Contains(target);
 }
 
+bool SquadSharedData::HasSpotted()
+{
+	return _spotted.Num() != 0;
+}
+
+TMap<TWeakObjectPtr<AFPSPawn>, int32>* SquadSharedData::GetSpottedEnemies()
+{
+	return &_spotted;
+}
+
+USquadSharedData::USquadSharedData()
+{
+	_pSquadSharedData = new SquadSharedData();
+	_isSquadSharedData = false;
+}
+
+USquadSharedData::~USquadSharedData()
+{
+	if (!_isSquadSharedData)
+	{
+		delete _pSquadSharedData;
+	}
+}
+
 void USquadSharedData::SetSquadSharedData(SquadSharedData* squadSharedData)
 {
-	_pSquadSharedData = squadSharedData;
+	if (squadSharedData != nullptr)
+	{
+		if (!_isSquadSharedData)
+		{
+			delete _pSquadSharedData;
+		}
+		_pSquadSharedData = squadSharedData;
+		_isSquadSharedData = true;
+	}
 }
 
 void USquadSharedData::Spotting(AFPSPawn* pawn)
 {
-	if (_pSquadSharedData != nullptr)
-	{
-		_pSquadSharedData->Spotted(pawn);
-	}
-	else
-	{
-		_spotted.Add(pawn);
-	}
+	_pSquadSharedData->Spotted(pawn);
 }
 
 void USquadSharedData::Disapear(AFPSPawn* pawn)
 {
-	if (_pSquadSharedData != nullptr)
-	{
-		_pSquadSharedData->Disapear(pawn);
-	}
-	else
-	{
-		_spotted.Remove(pawn);
-	}
+	_pSquadSharedData->Disapear(pawn);
 }
 
-bool USquadSharedData::HasSpotted(AFPSPawn* target)
+bool USquadSharedData::IsSpotted(AFPSPawn* target)
 {
-	if (_pSquadSharedData != nullptr)
-	{
-		return _pSquadSharedData->HasSpotted(target);
-	}
-	else
-	{
-		return _spotted.Contains(target);
-	}
+	return _pSquadSharedData->IsSpotted(target);
+}
+
+bool USquadSharedData::HasSpotted()
+{
+	return _pSquadSharedData->HasSpotted();
+}
+
+TMap<TWeakObjectPtr<AFPSPawn>, int32>* USquadSharedData::GetSpottedEnemies()
+{
+	return _pSquadSharedData->GetSpottedEnemies();
 }

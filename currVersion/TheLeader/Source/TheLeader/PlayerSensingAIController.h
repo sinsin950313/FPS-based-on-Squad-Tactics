@@ -36,8 +36,9 @@ public:
 	UFUNCTION()
 	void SpottingEnemy(AFPSPawn* targetPawn);
 	UFUNCTION()
-	void DisapearEnemy(AFPSPawn* targetPawn);
-	bool HasSpotted(AFPSPawn* target);
+	void DisappearEnemy(AFPSPawn* targetPawn);
+	bool IsSpotted(AFPSPawn* target);
+	bool HasSpotted();
 
 private:
 	UPROPERTY()
@@ -50,4 +51,7 @@ private:
 	UAISensingUpdater* _sensingUpdater;
 public:
 	virtual UAISensingUpdater* GetSensingUpdater() override;
+
+public:
+	virtual void SensingUpdate(AActor* Actor, FAIStimulus Stimulus) override;
 };

@@ -8,8 +8,11 @@ APlayerSensingAIController::APlayerSensingAIController()
 {
 	SetGenericTeamId(FGenericTeamId(ETeam::PLAYER));
 
+	_squadSharedData = CreateDefaultSubobject<USquadSharedData>(TEXT("Squad Shared Data"));
 	_sensingUpdater = CreateDefaultSubobject<UAISensingUpdater>(TEXT("Sensing Updater"));
 	AISensorManager::GetInstance()->SetDefaultSense(this);
+
+	//GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &APlayerSensingAIController::SensingUpdate);
 }
 
 void APlayerSensingAIController::SetDefaultSensor()
@@ -33,14 +36,19 @@ void APlayerSensingAIController::SpottingEnemy(AFPSPawn* targetPawn)
 	_squadSharedData->Spotting(targetPawn);
 }
 
-void APlayerSensingAIController::DisapearEnemy(AFPSPawn* targetPawn)
+void APlayerSensingAIController::DisappearEnemy(AFPSPawn* targetPawn)
 {
 	_squadSharedData->Disapear(targetPawn);
 }
 
-bool APlayerSensingAIController::HasSpotted(AFPSPawn* target)
+bool APlayerSensingAIController::IsSpotted(AFPSPawn* target)
 {
-	return _squadSharedData->HasSpotted(target);
+	return _squadSharedData->IsSpotted(target);
+}
+
+bool APlayerSensingAIController::HasSpotted()
+{
+	return _squadSharedData->HasSpotted();
 }
 
 void APlayerSensingAIController::SetTeam(UGenericTeamAgent* team)
@@ -56,4 +64,20 @@ ETeamAttitude::Type APlayerSensingAIController::GetTeamAttitudeTowards(const AAc
 UAISensingUpdater* APlayerSensingAIController::GetSensingUpdater()
 {
 	return _sensingUpdater;
+}
+
+void APlayerSensingAIController::SensingUpdate(AActor* Actor, FAIStimulus Stimulus)
+{
+	AFPSPawn* pawn = Cast<AFPSPawn>(Actor);
+	if (pawn != nullptr)
+	{
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			SpottingEnemy(pawn);
+		}
+		else
+		{
+			DisappearEnemy(pawn);
+		}
+	}
 }

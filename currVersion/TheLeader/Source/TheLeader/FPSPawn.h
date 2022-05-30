@@ -47,6 +47,7 @@ private:
 	bool _bAttackStart = false;
 	float _lastAttackTime = 0.0f;
 	float _coolTime = 1.0f;
+public:
 	void Fire();
 private:
 	enum class EState { STANDUP, KNEEL, PINNED };

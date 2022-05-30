@@ -19,20 +19,28 @@ private:
 public:
 	void Spotted(AFPSPawn* pawn);
 	void Disapear(AFPSPawn* pawn);
-	bool HasSpotted(AFPSPawn* target);
+	bool IsSpotted(AFPSPawn* target);
+	bool HasSpotted();
+	TMap<TWeakObjectPtr<AFPSPawn>, int32>* GetSpottedEnemies();
 };
 
 UCLASS()
 class THELEADER_API USquadSharedData : public UObject
 {
 	GENERATED_BODY()
+
+public:
+	USquadSharedData();
+	~USquadSharedData();
 	
 private:
+	bool _isSquadSharedData;
 	SquadSharedData* _pSquadSharedData;
-	TArray<TWeakObjectPtr<AFPSPawn>> _spotted;
 public:
 	void SetSquadSharedData(SquadSharedData* squadSharedData);
 	void Spotting(AFPSPawn* pawn);
 	void Disapear(AFPSPawn* pawn);
-	bool HasSpotted(AFPSPawn* target);
+	bool IsSpotted(AFPSPawn* target);
+	bool HasSpotted();
+	TMap<TWeakObjectPtr<AFPSPawn>, int32>* GetSpottedEnemies();
 };

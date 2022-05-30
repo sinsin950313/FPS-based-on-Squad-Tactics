@@ -29,6 +29,7 @@ AFPSAIController::AFPSAIController()
 
 	_sensingUpdater = CreateDefaultSubobject<UAISensingUpdater>(TEXT("Sensing Updater"));
 	AISensorManager::GetInstance()->SetDefaultSense(this);
+	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AFPSAIController::SensingUpdate);
 
 	SetGenericTeamId(FGenericTeamId(ETeam::ENEMY));
 
@@ -115,17 +116,33 @@ void AFPSAIController::SetSquadSharedData(SquadSharedData* squadSharedData)
 
 void AFPSAIController::SpottingEnemy(AFPSPawn* pawn)
 {
+	UE_LOG(LogTemp, Log, TEXT("Spotting"));
 	_squadSharedData->Spotting(pawn);
 }
 
-void AFPSAIController::DisapearEnemy(AFPSPawn* pawn)
+void AFPSAIController::DisappearEnemy(AFPSPawn* pawn)
 {
 	_squadSharedData->Disapear(pawn);
 }
 
-bool AFPSAIController::HasSpotted(AFPSPawn* pawn)
+bool AFPSAIController::IsSpotted(AFPSPawn* pawn)
 {
-	return _squadSharedData->HasSpotted(pawn);
+	return _squadSharedData->IsSpotted(pawn);
+}
+
+bool AFPSAIController::HasSpotted()
+{
+	return _squadSharedData->HasSpotted();
+}
+
+AFPSPawn* AFPSAIController::GetSpottedEnemy()
+{
+	TMap<TWeakObjectPtr<AFPSPawn>, int32>* spottedEnemies = _squadSharedData->GetSpottedEnemies();
+
+	UE_LOG(LogTemp, Warning, TEXT("FPSAIController GetSpottedEnemy need to get optimize Enemy"));
+
+	auto iter = spottedEnemies->CreateIterator();
+	return iter.Key().Get();
 }
 
 void AFPSAIController::SetDefaultSensor()
@@ -141,4 +158,20 @@ void AFPSAIController::SetSightConfig(AFPSPawn* pawn)
 UAISensingUpdater* AFPSAIController::GetSensingUpdater()
 {
 	return _sensingUpdater;
+}
+
+void AFPSAIController::SensingUpdate(AActor* Actor, FAIStimulus Stimulus)
+{
+	AFPSPawn* pawn = Cast<AFPSPawn>(Actor);
+	if (pawn != nullptr)
+	{
+		if (Stimulus.WasSuccessfullySensed())
+		{
+			SpottingEnemy(pawn);
+		}
+		else
+		{
+			DisappearEnemy(pawn);
+		}
+	}
 }

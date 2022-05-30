@@ -50,6 +50,9 @@ void ACommanderPawn::BeginPlay()
 	CreateMember(FVector(0, 0, 0));
 	CreateMember(FVector(100, 0, 0));
 
+	ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(GetController());
+	controller->SetSquadSharedData(_squadSharedData);
+
 	ToFPSMode();
 }
 

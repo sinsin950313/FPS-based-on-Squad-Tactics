@@ -74,8 +74,10 @@ private:
 public:
 	virtual void SetSquadSharedData(SquadSharedData* squadSharedData) override;
 	void SpottingEnemy(AFPSPawn* pawn);
-	void DisapearEnemy(AFPSPawn* pawn);
-	bool HasSpotted(AFPSPawn* target);
+	void DisappearEnemy(AFPSPawn* pawn);
+	bool IsSpotted(AFPSPawn* target);
+	bool HasSpotted();
+	AFPSPawn* GetSpottedEnemy();
 
 private:
 	virtual void SetDefaultSensor() override;
@@ -85,4 +87,7 @@ private:
 	UAISensingUpdater* _sensingUpdater;
 public:
 	virtual UAISensingUpdater* GetSensingUpdater() override;
+
+public:
+	virtual void SensingUpdate(AActor* Actor, FAIStimulus Stimulus) override;
 };

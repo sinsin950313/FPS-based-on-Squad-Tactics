@@ -25,7 +25,7 @@ private:
 public:
 	void SetSquadSharedData(SquadSharedData* squadSharedData);
 	void SpottingEnemy(AFPSPawn* pawn);
-	void DisapearEnemy(AFPSPawn* pawn);
+	void DisappearEnemy(AFPSPawn* pawn);
 	
 public:
 	UFUNCTION()

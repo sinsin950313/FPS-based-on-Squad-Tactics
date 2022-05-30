@@ -20,7 +20,7 @@ void UAISensingUpdater::SpottingEnemy(AFPSPawn* pawn)
 	_squadSharedData->Spotting(pawn);
 }
 
-void UAISensingUpdater::DisapearEnemy(AFPSPawn* pawn)
+void UAISensingUpdater::DisappearEnemy(AFPSPawn* pawn)
 {
 	_squadSharedData->Disapear(pawn);
 }
@@ -36,7 +36,7 @@ void UAISensingUpdater::Sensing(AActor* Actor, FAIStimulus Stimulus)
 		}
 		else
 		{
-			DisapearEnemy(pawn);
+			DisappearEnemy(pawn);
 		}
 	}
 }

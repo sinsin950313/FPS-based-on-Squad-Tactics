@@ -28,4 +28,6 @@ public:
 	virtual void SetDefaultSensor() = 0;
 	virtual void SetSightConfig(AFPSPawn* pawn) = 0;
 	virtual UAISensingUpdater* GetSensingUpdater() = 0;
+	UFUNCTION()
+	virtual void SensingUpdate(AActor* Actor, FAIStimulus Stimulus) = 0;
 };
