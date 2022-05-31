@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "../TheLeaderCommonData.h"
+
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTService.h"
 #include "BT_Service_HasSpottedEnemy.generated.h"
@@ -19,4 +21,7 @@ public:
 
 protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+private:
+	bool _spottedBefore;
+	EBotState _beforeState;
 };

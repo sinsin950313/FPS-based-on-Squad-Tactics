@@ -39,10 +39,12 @@ private:
 	void MoveRightSide(float val);
 	void Turn(float val);
 	void LookAt(float val);
+	void ToCommandMode();
+public:
 	void AttackStart();
 	void AttackStop();
+private:
 	void Kneel();
-	void ToCommandMode();
 private:
 	bool _bAttackStart = false;
 	float _lastAttackTime = 0.0f;

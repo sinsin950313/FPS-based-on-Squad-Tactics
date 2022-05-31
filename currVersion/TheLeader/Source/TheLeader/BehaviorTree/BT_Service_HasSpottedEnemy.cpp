@@ -3,10 +3,12 @@
 
 #include "BT_Service_HasSpottedEnemy.h"
 #include "../FPSAIController.h"
+#include "BehaviorTree\BlackboardComponent.h"
 
 UBT_Service_HasSpottedEnemy::UBT_Service_HasSpottedEnemy()
 {
 	NodeName = TEXT("Is Spotted Enemy Check");
+	_spottedBefore = false;
 }
 
 void UBT_Service_HasSpottedEnemy::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -19,8 +21,31 @@ void UBT_Service_HasSpottedEnemy::TickNode(UBehaviorTreeComponent& OwnerComp, ui
 		return;
 	}
 
+	AFPSPawn* pawn = Cast<AFPSPawn>(controller->GetPawn());
+	if (pawn == nullptr)
+	{
+		return;
+	}
+
 	if (controller->HasSpotted())
 	{
-		controller->SetState(EBotState::FIRE);
+		AFPSPawn* enemy = controller->GetSpottedEnemy();
+		if (enemy != nullptr)
+		{
+			OwnerComp.GetBlackboardComponent()->SetValueAsObject(AFPSAIController::kTarget, enemy);
+			_beforeState = static_cast<EBotState>(OwnerComp.GetBlackboardComponent()->GetValueAsEnum(AFPSAIController::kState));
+			_spottedBefore = true;
+			controller->SetState(EBotState::FIRE);
+			pawn->AttackStart();
+		}
+	}
+	else
+	{
+		if (_spottedBefore)
+		{
+			controller->SetState(_beforeState);
+			pawn->AttackStop();
+			_spottedBefore = false;
+		}
 	}
 }

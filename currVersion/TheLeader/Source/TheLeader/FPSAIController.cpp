@@ -8,8 +8,9 @@
 
 const FName AFPSAIController::kDestination(TEXT("Destination"));
 const FName AFPSAIController::kState(TEXT("State"));
+const FName AFPSAIController::kFireAttitude(TEXT("FireAttitude"));
 const FName AFPSAIController::kLookAt(TEXT("LookAt"));
-const FName AFPSAIController::kFind(TEXT("Find"));
+const FName AFPSAIController::kTarget(TEXT("Target"));
 
 AFPSAIController::AFPSAIController()
 {

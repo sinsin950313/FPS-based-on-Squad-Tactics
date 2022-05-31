@@ -24,7 +24,9 @@ EBTNodeResult::Type UBT_Task_LookAt::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 	FVector from = controlPawn->GetActorLocation();
 	FVector to = OwnerComp.GetBlackboardComponent()->GetValueAsVector(AFPSAIController::kLookAt);
 	FVector direction = to - from;
-	controlPawn->SetActorRotation(direction.Rotation());
+	FRotator rotator = direction.Rotation();
+	rotator.Pitch = 0;
+	controlPawn->SetActorRotation(rotator);
 
 	return result;
 }

@@ -1,23 +1,24 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BT_Service_LookAt.h"
+#include "BT_Task_LookTarget.h"
+#include "BehaviorTree/BlackboardComponent.h" 
+#include "../FPSPawn.h"
 #include "../FPSAIController.h"
-#include "BehaviorTree\BlackboardComponent.h"
 
-UBT_Service_LookAt::UBT_Service_LookAt()
+UBT_Task_LookTarget::UBT_Task_LookTarget()
 {
-	NodeName = TEXT("Look At");
+	NodeName = TEXT("Look Target");
 }
 
-void UBT_Service_LookAt::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+EBTNodeResult::Type UBT_Task_LookTarget::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
+	EBTNodeResult::Type result = Super::ExecuteTask(OwnerComp, NodeMemory);
 
 	AFPSPawn* target = Cast<AFPSPawn>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AFPSAIController::kTarget));
 	if (target == nullptr)
 	{
-		return;
+		return EBTNodeResult::Failed;
 	}
 
 	AAIController* controller = OwnerComp.GetAIOwner();
@@ -27,4 +28,6 @@ void UBT_Service_LookAt::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* Node
 	FVector direction = targetLocation - location;
 
 	pawn->SetActorRotation(direction.Rotation());
+
+	return result;
 }

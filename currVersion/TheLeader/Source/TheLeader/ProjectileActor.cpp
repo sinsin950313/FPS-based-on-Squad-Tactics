@@ -19,7 +19,8 @@ AProjectileActor::AProjectileActor()
 	RootComponent = sphereComponent;
 
 	_projectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
-	_projectileMovementComponent->InitialSpeed = 10000;
+	//_projectileMovementComponent->InitialSpeed = 10000;
+	_projectileMovementComponent->InitialSpeed = 100;
 	_projectileMovementComponent->UpdatedComponent = RootComponent;
 	AddOwnedComponent(_projectileMovementComponent);
 

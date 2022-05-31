@@ -2,8 +2,9 @@
 
 
 #include "BT_Task_Fire.h"
-#include "AIController.h"
+#include "../FPSAIController.h"
 #include "../FPSPawn.h"
+#include "BehaviorTree/BlackboardComponent.h" 
 
 UBT_Task_Fire::UBT_Task_Fire()
 {
@@ -19,7 +20,11 @@ EBTNodeResult::Type UBT_Task_Fire::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		AFPSPawn* pawn = Cast<AFPSPawn>(OwnerComp.GetAIOwner()->GetPawn());
 		if (pawn != nullptr)
 		{
-			pawn->Fire();
+			AFPSPawn* target = Cast<AFPSPawn>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AFPSAIController::kTarget));
+			if (target != nullptr)
+			{
+				pawn->Fire();
+			}
 		}
 		else
 		{

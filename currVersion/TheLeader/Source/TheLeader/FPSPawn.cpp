@@ -54,13 +54,7 @@ void AFPSPawn::Tick(float DeltaTime)
 	
 	_lastAttackTime += DeltaTime;
 
-	if (_bAttackStart)
-	{
-		if (_coolTime <= _lastAttackTime)
-		{
-			Fire();
-		}
-	}
+	Fire();
 }
 
 // Called to bind functionality to input
@@ -147,13 +141,19 @@ void AFPSPawn::ToCommandMode()
 
 void AFPSPawn::Fire()
 {
-	FActorSpawnParameters param;
-	param.Instigator = this;
-	GetWorld()->SpawnActor<AProjectileActor>(_cameraComponent->GetComponentLocation() + _cameraComponent->GetForwardVector() * 100, _cameraComponent->GetComponentRotation(), param);
-	_lastAttackTime = 0;
+	if (_bAttackStart)
+	{
+		if (_coolTime <= _lastAttackTime)
+		{
+			FActorSpawnParameters param;
+			param.Instigator = this;
+			GetWorld()->SpawnActor<AProjectileActor>(_cameraComponent->GetComponentLocation() + _cameraComponent->GetForwardVector() * 100, _cameraComponent->GetComponentRotation(), param);
+			_lastAttackTime = 0;
 
-	UE_LOG(LogTemp, Log, TEXT("Call Fire Attitude Delegate execute"));
-	FireAttitudeDelegate.ExecuteIfBound(EBotFireAttitude::FIREATWILL);
+			UE_LOG(LogTemp, Log, TEXT("Call Fire Attitude Delegate execute"));
+			FireAttitudeDelegate.ExecuteIfBound(EBotFireAttitude::FIREATWILL);
+		}
+	}
 }
 
 void AFPSPawn::SetState(EState state)

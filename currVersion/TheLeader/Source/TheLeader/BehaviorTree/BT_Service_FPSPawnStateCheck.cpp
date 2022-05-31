@@ -23,11 +23,6 @@ void UBT_Service_FPSPawnStateCheck::TickNode(UBehaviorTreeComponent& OwnerComp, 
 		return;
 	}
 
-	AFPSPawn* controllingPawn = Cast<AFPSPawn>(controller->GetPawn());
-	if (controllingPawn == nullptr)
-	{
-		return;
-	}
-
 	OwnerComp.GetBlackboardComponent()->SetValueAsEnum(AFPSAIController::kState, controller->GetState());
+	OwnerComp.GetBlackboardComponent()->SetValueAsEnum(AFPSAIController::kFireAttitude, controller->GetFireAttitude());
 }

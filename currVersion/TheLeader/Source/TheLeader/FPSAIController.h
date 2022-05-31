@@ -32,8 +32,9 @@ public:
 public:
 	static const FName kDestination;
 	static const FName kState;
+	static const FName kFireAttitude;
 	static const FName kLookAt;
-	static const FName kFind;
+	static const FName kTarget;
 private:
 	UPROPERTY()
 	UBehaviorTree* _BTAsset;

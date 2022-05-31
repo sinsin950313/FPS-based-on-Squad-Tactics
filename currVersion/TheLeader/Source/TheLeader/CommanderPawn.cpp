@@ -65,6 +65,7 @@ void ACommanderPawn::CreateMember(FVector relativeLocation)
 	_squadMembers.Add(Cast<AFPSAIController>(member->GetController()));
 
 	ControllerBuilder::GetInstance()
+		->InitAttitude(EBotFireAttitude::HOLDFIRE)
 		->InitTeam(ETeam::PLAYER)
 		->SharedDataSet(_squadSharedData)
 		->Build(controller);
