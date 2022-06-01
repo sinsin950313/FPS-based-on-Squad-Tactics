@@ -44,7 +44,6 @@ AFPSPawn::AFPSPawn() : _mode(EPlayerMode::FPSMODE)
 void AFPSPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame

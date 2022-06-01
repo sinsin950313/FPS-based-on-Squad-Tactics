@@ -61,9 +61,9 @@ public:
 	UFUNCTION()
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor* Other) const;
 	
-private:
-	UPROPERTY()
-	USquadSharedData* _squadSharedData;
+//private:
+//	UPROPERTY()
+//	USquadSharedData* _squadSharedData;
 public:
 	virtual void SetSquadSharedData(SquadSharedData* squadSharedData) override;
 

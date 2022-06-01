@@ -27,6 +27,7 @@ class THELEADER_API AFPSAIController : public AAIController, public IInGameContr
 	
 public:
 	AFPSAIController();
+	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
 public:
@@ -69,9 +70,9 @@ public:
 	virtual FGenericTeamId GetGenericTeamId() const override;
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 	
-private:
-	UPROPERTY()
-	USquadSharedData* _squadSharedData;
+//private:
+//	UPROPERTY()
+//	USquadSharedData* _squadSharedData;
 public:
 	virtual void SetSquadSharedData(SquadSharedData* squadSharedData) override;
 	void SpottingEnemy(AFPSPawn* pawn);
@@ -86,7 +87,7 @@ private:
 
 private:
 	UAISensingUpdater* _sensingUpdater;
-public:
+//public:
 	virtual UAISensingUpdater* GetSensingUpdater() override;
 
 public:

@@ -25,6 +25,21 @@ void UAISensingUpdater::DisappearEnemy(AFPSPawn* pawn)
 	_squadSharedData->Disapear(pawn);
 }
 
+TMap<TWeakObjectPtr<AFPSPawn>, int32>* UAISensingUpdater::GetSpottedEnemies()
+{
+	return _squadSharedData->GetSpottedEnemies();
+}
+
+bool UAISensingUpdater::IsSpotted(AFPSPawn* pawn)
+{
+	return _squadSharedData->IsSpotted(pawn);
+}
+
+bool UAISensingUpdater::HasSpotted()
+{
+	return _squadSharedData->HasSpotted();
+}
+
 void UAISensingUpdater::Sensing(AActor* Actor, FAIStimulus Stimulus)
 {
 	AFPSPawn* pawn = Cast<AFPSPawn>(Actor);

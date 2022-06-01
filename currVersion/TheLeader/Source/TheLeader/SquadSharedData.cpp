@@ -10,13 +10,13 @@ void SquadSharedData::Spotted(AFPSPawn* pawn)
 		_spotted.Add(pawn, 0);
 	}
 	int* ptr = _spotted.Find(pawn);
-	*(++ptr);
+	++(*ptr);
 }
 
 void SquadSharedData::Disapear(AFPSPawn* pawn)
 {
 	int* ptr = _spotted.Find(pawn);
-	*(--ptr);
+	--(*ptr);
 	if (*ptr == 0)
 	{
 		_spotted.Remove(pawn);

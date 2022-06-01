@@ -36,7 +36,7 @@ void ATheLeaderPlayerController::Init()
 {
 	_fireAttitude = CreateDefaultSubobject<UFireAttitude>(TEXT("Fire Attitude"));
 	_teamAgent = CreateDefaultSubobject<UGenericTeamAgent>(TEXT("Team Agent"));
-	_squadSharedData = CreateDefaultSubobject<USquadSharedData>(TEXT("Squad Shared Data"));
+	//_squadSharedData = CreateDefaultSubobject<USquadSharedData>(TEXT("Squad Shared Data"));
 }
 
 void ATheLeaderPlayerController::ChangePlayMode(EPlayerMode currPlayState)
@@ -124,7 +124,7 @@ ETeamAttitude::Type ATheLeaderPlayerController::GetTeamAttitudeTowards(const AAc
 
 void ATheLeaderPlayerController::SetSquadSharedData(SquadSharedData* squadSharedData)
 {
-	_squadSharedData->SetSquadSharedData(squadSharedData);
+	//_squadSharedData->SetSquadSharedData(squadSharedData);
 	if (_playerSensingPawn != nullptr)
 	{
 		_playerSensingPawn->SetSquadSharedData(squadSharedData);

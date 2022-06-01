@@ -26,6 +26,9 @@ public:
 	void SetSquadSharedData(SquadSharedData* squadSharedData);
 	void SpottingEnemy(AFPSPawn* pawn);
 	void DisappearEnemy(AFPSPawn* pawn);
+	TMap<TWeakObjectPtr<AFPSPawn>, int32>* GetSpottedEnemies();
+	bool IsSpotted(AFPSPawn* pawn);
+	bool HasSpotted();
 	
 public:
 	UFUNCTION()

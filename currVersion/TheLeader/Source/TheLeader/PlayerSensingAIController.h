@@ -30,7 +30,7 @@ public:
 	void SetSightConfig(AFPSPawn* pawn) override;
 
 private:
-	USquadSharedData* _squadSharedData;
+	//USquadSharedData* _squadSharedData;
 public:
 	void SetSquadSharedData(SquadSharedData* squadSharedData);
 	UFUNCTION()
