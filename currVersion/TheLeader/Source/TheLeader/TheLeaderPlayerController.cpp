@@ -104,6 +104,7 @@ EBotFireAttitude ATheLeaderPlayerController::GetFireAttitude()
 
 void ATheLeaderPlayerController::SetFireAttitude(EBotFireAttitude fireAttitude)
 {
+	UE_LOG(LogTemp, Log, TEXT("Player Change Attitude %d -> %d"), GetFireAttitude(), fireAttitude);
 	_fireAttitude->SetFireAttitude(fireAttitude);
 }
 

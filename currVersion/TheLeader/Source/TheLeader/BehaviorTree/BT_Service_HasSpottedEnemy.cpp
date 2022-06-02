@@ -20,6 +20,11 @@ void UBT_Service_HasSpottedEnemy::TickNode(UBehaviorTreeComponent& OwnerComp, ui
 	{
 		return;
 	}
+	
+	if (controller->GetFireAttitude() == EBotFireAttitude::HOLDFIRE)
+	{
+		return;
+	}
 
 	AFPSPawn* pawn = Cast<AFPSPawn>(controller->GetPawn());
 	if (pawn == nullptr)

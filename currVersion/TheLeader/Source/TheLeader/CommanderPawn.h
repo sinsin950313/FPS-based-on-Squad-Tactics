@@ -54,10 +54,12 @@ private:
 	void ToFPSMode();
 	void ToMove();
 	void LookAt();
+	void FireAtWill();
+	void HoldFire();
 
 public:
 	static const FName kFireAttitude;
-	void ChangeSquadFireAttitude(EBotFireAttitude attitude);
+	void SetSquadFireAttitude(EBotFireAttitude attitude);
 	EBotFireAttitude GetSquadFireAttitude();
 private:
 	EBotFireAttitude _currentFireAttitude;

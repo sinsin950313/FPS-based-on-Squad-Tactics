@@ -80,6 +80,7 @@ void AFPSAIController::LookAt(FVector that)
 
 void AFPSAIController::SetFireAttitude(EBotFireAttitude fireAttitude)
 {
+	UE_LOG(LogTemp, Log, TEXT("AI Change Attitude"));
 	_fireAttitude->SetFireAttitude(fireAttitude);
 }
 

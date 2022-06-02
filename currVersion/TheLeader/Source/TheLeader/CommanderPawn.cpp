@@ -52,6 +52,7 @@ void ACommanderPawn::BeginPlay()
 
 	ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(GetController());
 	controller->SetSquadSharedData(_squadSharedData);
+	GetLeader()->FireAttitudeDelegate.BindUFunction(controller, FName("SetFireAttitude"));
 
 	ToFPSMode();
 }
@@ -65,7 +66,6 @@ void ACommanderPawn::CreateMember(FVector relativeLocation)
 	_squadMembers.Add(Cast<AFPSAIController>(member->GetController()));
 
 	ControllerBuilder::GetInstance()
-		->InitAttitude(EBotFireAttitude::HOLDFIRE)
 		->InitTeam(ETeam::PLAYER)
 		->SharedDataSet(_squadSharedData)
 		->Build(controller);
@@ -74,10 +74,7 @@ void ACommanderPawn::CreateMember(FVector relativeLocation)
 template<typename ToLeader, typename ToMembers>
 void ACommanderPawn::DoIterateToMembers(ToLeader doFunctionWithLeader, ToMembers doFunctionWithMembers)
 {
-	if (_currentLeader != nullptr && !_currentLeader->IsActorBeingDestroyed())
-	{
-		doFunctionWithLeader(_currentLeader);
-	}
+	doFunctionWithLeader(this, GetLeader());
 
 	for (auto& member : _squadMembers)
 	{
@@ -104,20 +101,25 @@ void ACommanderPawn::Tick(float DeltaTime)
 
 	bool isFire = false;
 	DoIterateToMembers(
-		[&isFire](AFPSPawn* pawn)-> void {
-			ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(pawn->GetController());
+		[&isFire](ACommanderPawn* commander, AFPSPawn* leader)-> void {
+			ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(commander->GetController());
+			if (controller == nullptr)
+			{
+				controller = Cast<ATheLeaderPlayerController>(leader->GetController());
+			}
+
 			if (controller != nullptr)
 			{
-				isFire = (controller->GetFireAttitude() == EBotFireAttitude::FIREATWILL);
+				isFire |= (controller->GetFireAttitude() == EBotFireAttitude::FIREATWILL);
 			}
 		},
 		[&isFire](AFPSAIController* controller)-> void {
-			isFire = controller->GetFireAttitude() == EBotFireAttitude::FIREATWILL;
+			isFire |= (controller->GetFireAttitude() == EBotFireAttitude::FIREATWILL);
 		});
 
 	if (GetSquadFireAttitude() == EBotFireAttitude::HOLDFIRE && isFire)
 	{
-		ChangeSquadFireAttitude(EBotFireAttitude::FIREATWILL);
+		SetSquadFireAttitude(EBotFireAttitude::FIREATWILL);
 	}
 }
 
@@ -138,6 +140,9 @@ void ACommanderPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction(TEXT("ToMove"), EInputEvent::IE_Pressed, this, &ACommanderPawn::ToMove);
 	PlayerInputComponent->BindAction(TEXT("LookAt"), EInputEvent::IE_Released, this, &ACommanderPawn::LookAt);
+
+	PlayerInputComponent->BindAction(TEXT("FireAtWill"), EInputEvent::IE_Pressed, this, &ACommanderPawn::FireAtWill);
+	PlayerInputComponent->BindAction(TEXT("HoldFire"), EInputEvent::IE_Pressed, this, &ACommanderPawn::HoldFire);
 }
 
 void ACommanderPawn::MoveForward(float val)
@@ -195,7 +200,7 @@ void ACommanderPawn::ToMove()
 		controller->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel3, false, hit);
 		UE_LOG(LogTemp, Log, TEXT("%s"), *hit.Location.ToString());
 		DoIterateToMembers(
-			[](AFPSPawn* pawn)->void {
+			[](ACommanderPawn* commander, AFPSPawn* leader)->void {
 				//do nothing
 			},
 			[hit](AFPSAIController* controller)->void {
@@ -212,7 +217,7 @@ void ACommanderPawn::LookAt()
 		FHitResult hit;
 		controller->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel3, false, hit);
 		DoIterateToMembers(
-			[](AFPSPawn* pawn)->void
+			[](ACommanderPawn* commander, AFPSPawn* leader)->void
 			{
 				//do nothing
 			},
@@ -223,13 +228,32 @@ void ACommanderPawn::LookAt()
 	}
 }
 
-void ACommanderPawn::ChangeSquadFireAttitude(EBotFireAttitude attitude)
+void ACommanderPawn::FireAtWill()
+{
+	UE_LOG(LogTemp, Log, TEXT("Fire At Will"));
+	SetSquadFireAttitude(EBotFireAttitude::FIREATWILL);
+}
+
+void ACommanderPawn::HoldFire()
+{
+	UE_LOG(LogTemp, Log, TEXT("Hold Fire"));
+	SetSquadFireAttitude(EBotFireAttitude::HOLDFIRE);
+}
+
+void ACommanderPawn::SetSquadFireAttitude(EBotFireAttitude attitude)
 {
 	_currentFireAttitude = attitude;
 	DoIterateToMembers(
-		[attitude](AFPSPawn* pawn)->void {
-			ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(pawn->GetController());
-			controller->SetFireAttitude(attitude);
+		[attitude](ACommanderPawn* commander, AFPSPawn* leader)->void {
+			ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(commander->GetController());
+			if (controller == nullptr)
+			{
+				controller = Cast<ATheLeaderPlayerController>(leader->GetController());
+			}
+			if (controller != nullptr)
+			{
+				controller->SetFireAttitude(attitude);
+			}
 		},
 		[attitude](AFPSAIController* controller)->void {
 			controller->SetFireAttitude(attitude);
