@@ -24,7 +24,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void SetDefaultSensor();
+	//void SetDefaultSensor();
 	void SetSightConfig(AFPSPawn* pawn);
 
 public:

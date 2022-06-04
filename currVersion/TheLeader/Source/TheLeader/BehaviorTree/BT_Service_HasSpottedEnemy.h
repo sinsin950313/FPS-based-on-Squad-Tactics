@@ -21,7 +21,4 @@ public:
 
 protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
-private:
-	bool _spottedBefore;
-	EBotState _beforeState;
 };

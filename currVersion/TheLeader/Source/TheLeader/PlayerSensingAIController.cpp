@@ -15,10 +15,10 @@ APlayerSensingAIController::APlayerSensingAIController()
 	//GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &APlayerSensingAIController::SensingUpdate);
 }
 
-void APlayerSensingAIController::SetDefaultSensor()
-{
-	AISensorManager::GetInstance()->SetDefaultSense(this);
-}
+//void APlayerSensingAIController::SetDefaultSensor()
+//{
+//	AISensorManager::GetInstance()->SetDefaultSense(this);
+//}
 
 void APlayerSensingAIController::SetSightConfig(AFPSPawn* pawn)
 {

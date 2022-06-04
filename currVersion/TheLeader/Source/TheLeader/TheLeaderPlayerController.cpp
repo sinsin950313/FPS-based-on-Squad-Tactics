@@ -22,7 +22,7 @@ void ATheLeaderPlayerController::BeginPlay()
 	_commandModePawn = Cast<ACommanderPawn>(GetPawn());
 
 	_playerSensingPawn = GetWorld()->SpawnActor<APlayerSensorPawn>();
-	_playerSensingPawn->SetDefaultSensor();
+	//_playerSensingPawn->SetDefaultSensor();
 	_playerSensingPawn->SetTeam(_teamAgent);
 }
 
@@ -104,7 +104,7 @@ EBotFireAttitude ATheLeaderPlayerController::GetFireAttitude()
 
 void ATheLeaderPlayerController::SetFireAttitude(EBotFireAttitude fireAttitude)
 {
-	UE_LOG(LogTemp, Log, TEXT("Player Change Attitude %d -> %d"), GetFireAttitude(), fireAttitude);
+	//UE_LOG(LogTemp, Log, TEXT("Player Change Attitude %d -> %d"), GetFireAttitude(), fireAttitude);
 	_fireAttitude->SetFireAttitude(fireAttitude);
 }
 

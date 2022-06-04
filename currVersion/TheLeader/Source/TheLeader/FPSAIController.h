@@ -79,10 +79,16 @@ public:
 	void DisappearEnemy(AFPSPawn* pawn);
 	bool IsSpotted(AFPSPawn* target);
 	bool HasSpotted();
+private:
+	bool _isSpotting;
+	EBotState _beforeState;
+public:
+	void Spotting();
+	void NotSpotting();
 	AFPSPawn* GetSpottedEnemy();
 
 private:
-	virtual void SetDefaultSensor() override;
+	//virtual void SetDefaultSensor() override;
 	virtual void SetSightConfig(AFPSPawn* pawn) override;
 
 private:

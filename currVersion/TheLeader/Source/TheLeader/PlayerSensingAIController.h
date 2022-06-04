@@ -26,7 +26,7 @@ public:
 	APlayerSensingAIController();
 
 public:
-	void SetDefaultSensor() override;
+	//void SetDefaultSensor() override;
 	void SetSightConfig(AFPSPawn* pawn) override;
 
 private:

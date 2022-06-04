@@ -34,6 +34,8 @@ AFPSAIController::AFPSAIController()
 		->InitTeam(ETeam::ENEMY)
 		->SharedDataSet(nullptr)
 		->Build(this);
+
+	_isSpotting = false;
 }
 
 void AFPSAIController::BeginPlay()
@@ -80,7 +82,7 @@ void AFPSAIController::LookAt(FVector that)
 
 void AFPSAIController::SetFireAttitude(EBotFireAttitude fireAttitude)
 {
-	UE_LOG(LogTemp, Log, TEXT("AI Change Attitude"));
+	//UE_LOG(LogTemp, Log, TEXT("AI Change Attitude"));
 	_fireAttitude->SetFireAttitude(fireAttitude);
 }
 
@@ -144,6 +146,25 @@ bool AFPSAIController::HasSpotted()
 	return GetSensingUpdater()->HasSpotted();
 }
 
+void AFPSAIController::Spotting()
+{
+	if (!_isSpotting)
+	{
+		_beforeState = _currentState;
+		_currentState = EBotState::FIRE;
+		_isSpotting = true;
+	}
+}
+
+void AFPSAIController::NotSpotting()
+{
+	if (_isSpotting)
+	{
+		_currentState = _beforeState;
+		_isSpotting = false;
+	}
+}
+
 AFPSPawn* AFPSAIController::GetSpottedEnemy()
 {
 	//TMap<TWeakObjectPtr<AFPSPawn>, int32>* spottedEnemies = _squadSharedData->GetSpottedEnemies();
@@ -151,14 +172,18 @@ AFPSPawn* AFPSAIController::GetSpottedEnemy()
 
 	UE_LOG(LogTemp, Warning, TEXT("FPSAIController GetSpottedEnemy need to get optimize Enemy"));
 
-	auto iter = spottedEnemies->CreateIterator();
-	return iter.Key().Get();
+	if (spottedEnemies->Num() != 0)
+	{
+		auto iter = spottedEnemies->CreateIterator();
+		return iter.Key().Get();
+	}
+	return nullptr;
 }
 
-void AFPSAIController::SetDefaultSensor()
-{
-	AISensorManager::GetInstance()->SetDefaultSense(this);
-}
+//void AFPSAIController::SetDefaultSensor()
+//{
+//	AISensorManager::GetInstance()->SetDefaultSense(this);
+//}
 
 void AFPSAIController::SetSightConfig(AFPSPawn* pawn)
 {

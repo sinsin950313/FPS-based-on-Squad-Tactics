@@ -7,8 +7,7 @@
 
 UBT_Service_HasSpottedEnemy::UBT_Service_HasSpottedEnemy()
 {
-	NodeName = TEXT("Is Spotted Enemy Check");
-	_spottedBefore = false;
+	NodeName = TEXT("Has Spotted Enemy Check");
 }
 
 void UBT_Service_HasSpottedEnemy::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -20,37 +19,13 @@ void UBT_Service_HasSpottedEnemy::TickNode(UBehaviorTreeComponent& OwnerComp, ui
 	{
 		return;
 	}
-	
-	if (controller->GetFireAttitude() == EBotFireAttitude::HOLDFIRE)
-	{
-		return;
-	}
-
-	AFPSPawn* pawn = Cast<AFPSPawn>(controller->GetPawn());
-	if (pawn == nullptr)
-	{
-		return;
-	}
 
 	if (controller->HasSpotted())
 	{
-		AFPSPawn* enemy = controller->GetSpottedEnemy();
-		if (enemy != nullptr)
-		{
-			OwnerComp.GetBlackboardComponent()->SetValueAsObject(AFPSAIController::kTarget, enemy);
-			_beforeState = static_cast<EBotState>(OwnerComp.GetBlackboardComponent()->GetValueAsEnum(AFPSAIController::kState));
-			_spottedBefore = true;
-			controller->SetState(EBotState::FIRE);
-			pawn->AttackStart();
-		}
+		controller->Spotting();
 	}
 	else
 	{
-		if (_spottedBefore)
-		{
-			controller->SetState(_beforeState);
-			pawn->AttackStop();
-			_spottedBefore = false;
-		}
+		controller->NotSpotting();
 	}
 }

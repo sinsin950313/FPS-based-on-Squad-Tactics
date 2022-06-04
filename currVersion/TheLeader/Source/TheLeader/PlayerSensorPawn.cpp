@@ -23,11 +23,11 @@ void APlayerSensorPawn::BeginPlay()
 	Super::BeginPlay();
 }
 
-void APlayerSensorPawn::SetDefaultSensor()
-{
-	APlayerSensingAIController* controller = Cast<APlayerSensingAIController>(GetController());
-	controller->SetDefaultSensor();
-}
+//void APlayerSensorPawn::SetDefaultSensor()
+//{
+//	APlayerSensingAIController* controller = Cast<APlayerSensingAIController>(GetController());
+//	controller->SetDefaultSensor();
+//}
 
 void APlayerSensorPawn::SetSightConfig(AFPSPawn* pawn)
 {

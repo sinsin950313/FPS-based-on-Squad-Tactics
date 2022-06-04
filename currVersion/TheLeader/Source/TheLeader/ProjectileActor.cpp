@@ -10,7 +10,7 @@ AProjectileActor::AProjectileActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	UE_LOG(LogTemp, Log, TEXT("Projectile Created"));
+	//UE_LOG(LogTemp, Log, TEXT("Projectile Created"));
 
 	USphereComponent* sphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Shpere Component"));
 	sphereComponent->SetCollisionProfileName(TEXT("Projectile"));
@@ -51,7 +51,7 @@ void AProjectileActor::Tick(float DeltaTime)
 
 void AProjectileActor::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Log, TEXT("Hit %s, %s"), *Hit.Actor->StaticClass()->GetName(), *Hit.Actor->GetActorLocation().ToString());
+	//UE_LOG(LogTemp, Log, TEXT("Hit %s, %s"), *Hit.Actor->StaticClass()->GetName(), *Hit.Actor->GetActorLocation().ToString());
 	if (Hit.Actor.IsValid())
 	{
 		Hit.Actor->TakeDamage(10.0f, FDamageEvent(), GetInstigator()->GetController(), this);
@@ -61,7 +61,7 @@ void AProjectileActor::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPr
 
 void AProjectileActor::EndTime()
 {
-	UE_LOG(LogTemp, Log, TEXT("ProjectTile Time Over"));
+	//UE_LOG(LogTemp, Log, TEXT("ProjectTile Time Over"));
 	Destroy();
 }
 

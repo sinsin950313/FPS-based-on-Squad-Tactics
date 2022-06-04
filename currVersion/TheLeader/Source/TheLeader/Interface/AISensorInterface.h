@@ -25,7 +25,7 @@ class THELEADER_API IAISensorInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void SetDefaultSensor() = 0;
+	//virtual void SetDefaultSensor() = 0;
 	virtual void SetSightConfig(AFPSPawn* pawn) = 0;
 	virtual UAISensingUpdater* GetSensingUpdater() = 0;
 	UFUNCTION()

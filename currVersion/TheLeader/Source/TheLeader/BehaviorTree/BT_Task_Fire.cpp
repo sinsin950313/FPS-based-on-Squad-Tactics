@@ -23,14 +23,14 @@ EBTNodeResult::Type UBT_Task_Fire::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 			AFPSPawn* target = Cast<AFPSPawn>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AFPSAIController::kTarget));
 			if (target != nullptr)
 			{
+				pawn->AttackStart();
 				pawn->Fire();
+				pawn->AttackStop();
+
+				return result;
 			}
-		}
-		else
-		{
-			return EBTNodeResult::Failed;
 		}
 	}
 
-	return result;
+	return EBTNodeResult::Failed;
 }
