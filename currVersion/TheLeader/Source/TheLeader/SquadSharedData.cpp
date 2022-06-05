@@ -46,6 +46,7 @@ USquadSharedData::USquadSharedData()
 
 USquadSharedData::~USquadSharedData()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Memory Erased"));
 	if (!_isSquadSharedData)
 	{
 		delete _pSquadSharedData;
