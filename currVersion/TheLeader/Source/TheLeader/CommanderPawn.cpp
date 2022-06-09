@@ -48,7 +48,7 @@ void ACommanderPawn::BeginPlay()
 	Super::BeginPlay();
 
 	CreateMember(FVector(0, 0, 0));
-	//CreateMember(FVector(-300, 0, 0));
+	CreateMember(FVector(-300, 0, 0));
 
 	ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(GetController());
 	controller->SetSquadSharedData(_squadSharedData);
@@ -104,11 +104,6 @@ AFPSPawn* ACommanderPawn::GetLeader()
 void ACommanderPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	UE_LOG(LogTemp, Log, TEXT("Test!!!!!!!!!!!"));
-	UE_LOG(LogTemp, Log, TEXT("Test!!!!!!!!!!!"));
-	UE_LOG(LogTemp, Log, TEXT("Test!!!!!!!!!!!"));
-	UE_LOG(LogTemp, Log, TEXT("Test!!!!!!!!!!!"));
 
 	bool isFire = false;
 	DoIterateToMembers(

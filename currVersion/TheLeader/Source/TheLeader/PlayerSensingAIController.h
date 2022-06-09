@@ -48,6 +48,7 @@ public:
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
 private:
+	UPROPERTY()
 	UAISensingUpdater* _sensingUpdater;
 public:
 	virtual UAISensingUpdater* GetSensingUpdater() override;

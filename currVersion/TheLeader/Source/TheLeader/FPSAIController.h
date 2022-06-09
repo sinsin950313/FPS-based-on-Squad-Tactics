@@ -93,6 +93,7 @@ private:
 	virtual void SetSightConfig(AFPSPawn* pawn) override;
 
 private:
+	UPROPERTY()
 	UAISensingUpdater* _sensingUpdater;
 //public:
 	virtual UAISensingUpdater* GetSensingUpdater() override;
