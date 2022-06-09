@@ -12,6 +12,7 @@
 #include "GenericTeamAgent.h"
 #include "Interface/AISensorInterface.h"
 #include "AISensingUpdater.h"
+#include "PositionPointer.h"
 
 #include "CoreMinimal.h"
 #include "AIController.h"
@@ -49,7 +50,7 @@ public:
 	void SetState(EBotState state);
 
 public:
-	void MoveToDestination(FVector destination);
+	//void MoveToDestination(FVector destination);
 	void LookAt(FVector that);
 
 private:
@@ -98,4 +99,10 @@ private:
 
 public:
 	virtual void SensingUpdate(AActor* Actor, FAIStimulus Stimulus) override;
+
+private:
+	TWeakObjectPtr<APositionPointer> _position;
+public:
+	void SetPosition(APositionPointer* position);
+	FVector GetDestination();
 };

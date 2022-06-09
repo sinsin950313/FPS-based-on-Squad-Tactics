@@ -7,6 +7,7 @@
 #include "TheLeaderCommonData.h"
 #include "FPSAIController.h"
 #include "SquadSharedData.h"
+#include "PositionPointer.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/DefaultPawn.h"
@@ -69,4 +70,8 @@ private:
 
 private:
 	SquadSharedData* _squadSharedData;
+
+private:
+	void UpdateFormation();
+	TArray<APositionPointer*> _positionPointers;
 };

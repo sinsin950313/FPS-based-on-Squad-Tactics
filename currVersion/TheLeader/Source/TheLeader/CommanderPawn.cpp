@@ -48,22 +48,27 @@ void ACommanderPawn::BeginPlay()
 	Super::BeginPlay();
 
 	CreateMember(FVector(0, 0, 0));
-	CreateMember(FVector(100, 0, 0));
+	//CreateMember(FVector(-300, 0, 0));
 
 	ATheLeaderPlayerController* controller = Cast<ATheLeaderPlayerController>(GetController());
 	controller->SetSquadSharedData(_squadSharedData);
-	GetLeader()->FireAttitudeDelegate.BindUFunction(controller, FName("SetFireAttitude"));
 
 	ToFPSMode();
 }
 
 void ACommanderPawn::CreateMember(FVector relativeLocation)
 {
-	AFPSPawn* member = GetWorld()->SpawnActor<AFPSPawn>(GetActorLocation() - relativeLocation, GetActorRotation());
+	APositionPointer* pointer = GetWorld()->SpawnActor<APositionPointer>(GetActorLocation() + relativeLocation, FRotator());
+	pointer->SetRelativeLocation(relativeLocation);
+	_positionPointers.Add(pointer);
+
+	AFPSPawn* member = GetWorld()->SpawnActor<AFPSPawn>(pointer->GetActorLocation(), GetActorRotation());
 
 	AFPSAIController* controller = Cast<AFPSAIController>(member->GetController());
 	member->FireAttitudeDelegate.BindUFunction(controller, FName("SetFireAttitude"));
 	_squadMembers.Add(Cast<AFPSAIController>(member->GetController()));
+
+	controller->SetPosition(pointer);
 
 	ControllerBuilder::GetInstance()
 		->InitTeam(ETeam::PLAYER)
@@ -88,6 +93,7 @@ AFPSPawn* ACommanderPawn::GetLeader()
 	{
 		AFPSAIController* controller = *_squadMembers.begin();
 		_currentLeader = Cast<AFPSPawn>(controller->GetPawn());
+		_currentLeader->FireAttitudeDelegate.BindUFunction(controller, FName("SetFireAttitude"));
 		_squadMembers.Remove(controller);
 		controller->Destroy();
 	}
@@ -98,6 +104,11 @@ AFPSPawn* ACommanderPawn::GetLeader()
 void ACommanderPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	UE_LOG(LogTemp, Log, TEXT("Test!!!!!!!!!!!"));
+	UE_LOG(LogTemp, Log, TEXT("Test!!!!!!!!!!!"));
+	UE_LOG(LogTemp, Log, TEXT("Test!!!!!!!!!!!"));
+	UE_LOG(LogTemp, Log, TEXT("Test!!!!!!!!!!!"));
 
 	bool isFire = false;
 	DoIterateToMembers(
@@ -121,6 +132,8 @@ void ACommanderPawn::Tick(float DeltaTime)
 	{
 		SetSquadFireAttitude(EBotFireAttitude::FIREATWILL);
 	}
+
+	UpdateFormation();
 }
 
 // Called to bind functionality to input
@@ -199,13 +212,17 @@ void ACommanderPawn::ToMove()
 		FHitResult hit;
 		controller->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel3, false, hit);
 		UE_LOG(LogTemp, Log, TEXT("%s"), *hit.Location.ToString());
-		DoIterateToMembers(
-			[](ACommanderPawn* commander, AFPSPawn* leader)->void {
-				//do nothing
-			},
-			[hit](AFPSAIController* controller)->void {
-				controller->MoveToDestination(hit.Location);
-			});
+		//DoIterateToMembers(
+		//	[](ACommanderPawn* commander, AFPSPawn* leader)->void {
+		//		//do nothing
+		//	},
+		//	[hit](AFPSAIController* controller)->void {
+		//		//controller->MoveToDestination(hit.Location);
+		//	});
+		for (auto iter = _positionPointers.CreateIterator(); iter; ++iter)
+		{
+			_positionPointers[iter.GetIndex()]->SetPinPosition(hit.Location);
+		}
 	}
 }
 
@@ -263,4 +280,12 @@ void ACommanderPawn::SetSquadFireAttitude(EBotFireAttitude attitude)
 EBotFireAttitude ACommanderPawn::GetSquadFireAttitude()
 {
 	return _currentFireAttitude;
+}
+
+void ACommanderPawn::UpdateFormation()
+{
+	for (auto iter = _positionPointers.CreateIterator(); iter; ++iter)
+	{
+		_positionPointers[iter.GetIndex()]->SetDestination(GetLeader()->GetActorLocation());
+	}
 }

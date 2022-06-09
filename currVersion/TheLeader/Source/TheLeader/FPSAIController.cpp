@@ -51,7 +51,17 @@ void AFPSAIController::OnPossess(APawn* InPawn)
 
 	if (UseBlackboard(_BBAsset, Blackboard))
 	{
-		Blackboard->SetValueAsVector(kDestination, InPawn->GetActorLocation());
+		FVector location;
+		if (_position.IsValid())
+		{
+			location = _position.Get()->GetActorLocation();
+		}
+		else
+		{
+			location = InPawn->GetActorLocation();
+		}
+
+		Blackboard->SetValueAsVector(kDestination, location);
 		if (!RunBehaviorTree(_BTAsset))
 		{
 			UE_LOG(LogTemp, Log, TEXT("AIController could't run BehaviorTree"));
@@ -69,10 +79,10 @@ void AFPSAIController::SetState(EBotState state)
 	_currentState = state;
 }
 
-void AFPSAIController::MoveToDestination(FVector destination)
-{
-	Blackboard->SetValueAsVector(kDestination, destination);
-}
+//void AFPSAIController::MoveToDestination(FVector destination)
+//{
+//	Blackboard->SetValueAsVector(kDestination, destination);
+//}
 
 void AFPSAIController::LookAt(FVector that)
 {
@@ -210,4 +220,14 @@ void AFPSAIController::SensingUpdate(AActor* Actor, FAIStimulus Stimulus)
 	//	}
 	//}
 	GetSensingUpdater()->Sensing(Actor, Stimulus);
+}
+
+void AFPSAIController::SetPosition(APositionPointer* position)
+{
+	_position = position;
+}
+
+FVector AFPSAIController::GetDestination()
+{
+	return _position.IsValid() ? _position.Get()->GetActorLocation() : GetPawn()->GetActorLocation();
 }
