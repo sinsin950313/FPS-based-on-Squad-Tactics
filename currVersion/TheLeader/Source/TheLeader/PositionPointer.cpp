@@ -17,16 +17,16 @@ APositionPointer::APositionPointer()
 
 	_isPinned = false;
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh> meshLoader(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
-	if (meshLoader.Succeeded())
-	{
-		UStaticMeshComponent* meshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
-		meshComponent->SetupAttachment(RootComponent);
-		AddOwnedComponent(meshComponent);
-		meshComponent->SetStaticMesh(meshLoader.Object);
-		meshComponent->SetWorldScale3D(FVector(0.1f));
-		meshComponent->SetCollisionProfileName(TEXT("PositionPointer"));
-	}
+	//ConstructorHelpers::FObjectFinder<UStaticMesh> meshLoader(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+	//if (meshLoader.Succeeded())
+	//{
+	//	UStaticMeshComponent* meshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
+	//	meshComponent->SetupAttachment(RootComponent);
+	//	AddOwnedComponent(meshComponent);
+	//	meshComponent->SetStaticMesh(meshLoader.Object);
+	//	meshComponent->SetWorldScale3D(FVector(0.1f));
+	//	meshComponent->SetCollisionProfileName(TEXT("PositionPointer"));
+	//}
 }
 
 // Called when the game starts or when spawned

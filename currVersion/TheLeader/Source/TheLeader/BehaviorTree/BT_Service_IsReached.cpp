@@ -9,7 +9,7 @@
 UBT_Service_IsReached::UBT_Service_IsReached()
 {
 	NodeName = TEXT("Is reached to Position");
-	_reachedRadius = 5.0f;
+	_reachedRadius = 50.0f;
 }
 
 void UBT_Service_IsReached::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -26,12 +26,10 @@ void UBT_Service_IsReached::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* N
 	FVector position = controller->GetDestination();
 	if (_reachedRadius < Distance(current, position))
 	{
-		UE_LOG(LogTemp, Log, TEXT("%f"), Distance(current, position));
 		controller->SetState(EBotState::MOVE);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Log, TEXT("Reached"));
 		controller->SetState(EBotState::WAIT);
 	}
 }

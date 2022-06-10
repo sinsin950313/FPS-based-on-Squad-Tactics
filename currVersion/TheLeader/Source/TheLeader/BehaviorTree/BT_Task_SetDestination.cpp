@@ -3,7 +3,7 @@
 
 #include "BT_Task_SetDestination.h"
 #include "BehaviorTree\BlackboardComponent.h"
-#include "FPSAIController.h"
+#include "..\FPSAIController.h"
 
 UBT_Task_SetDestination::UBT_Task_SetDestination()
 {
