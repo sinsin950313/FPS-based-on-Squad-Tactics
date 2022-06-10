@@ -74,4 +74,7 @@ private:
 private:
 	void UpdateFormation();
 	TArray<APositionPointer*> _positionPointers;
+
+private:
+	void ReturnToFormation();
 };

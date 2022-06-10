@@ -96,6 +96,10 @@ AFPSPawn* ACommanderPawn::GetLeader()
 		_currentLeader->FireAttitudeDelegate.BindUFunction(controller, FName("SetFireAttitude"));
 		_squadMembers.Remove(controller);
 		controller->Destroy();
+
+		APositionPointer* temp = *_positionPointers.begin();
+		_positionPointers.Remove(temp);
+		temp->Destroy();
 	}
 	return _currentLeader;
 }
@@ -151,6 +155,7 @@ void ACommanderPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction(TEXT("FireAtWill"), EInputEvent::IE_Pressed, this, &ACommanderPawn::FireAtWill);
 	PlayerInputComponent->BindAction(TEXT("HoldFire"), EInputEvent::IE_Pressed, this, &ACommanderPawn::HoldFire);
+	PlayerInputComponent->BindAction(TEXT("Return To Formation"), EInputEvent::IE_Pressed, this, &ACommanderPawn::ReturnToFormation);
 }
 
 void ACommanderPawn::MoveForward(float val)
@@ -282,5 +287,13 @@ void ACommanderPawn::UpdateFormation()
 	for (auto iter = _positionPointers.CreateIterator(); iter; ++iter)
 	{
 		_positionPointers[iter.GetIndex()]->SetDestination(GetLeader()->GetActorLocation());
+	}
+}
+
+void ACommanderPawn::ReturnToFormation()
+{
+	for (auto iter = _positionPointers.CreateIterator(); iter; ++iter)
+	{
+		_positionPointers[iter.GetIndex()]->GetBackToFormation();
 	}
 }
