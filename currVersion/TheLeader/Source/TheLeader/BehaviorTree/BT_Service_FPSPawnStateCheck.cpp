@@ -23,6 +23,21 @@ void UBT_Service_FPSPawnStateCheck::TickNode(UBehaviorTreeComponent& OwnerComp, 
 		return;
 	}
 
-	OwnerComp.GetBlackboardComponent()->SetValueAsEnum(AFPSAIController::kState, controller->GetState());
 	OwnerComp.GetBlackboardComponent()->SetValueAsEnum(AFPSAIController::kFireAttitude, controller->GetFireAttitude());
+
+	int32 currentState = controller->GetStateFlag();
+
+	UE_LOG(LogTemp, Log, TEXT("FPSPawnStateCheck need to get optimize state"));
+	if (currentState & (1 << GetStateFlagShift(EBotStateFlag::ENGAGE)))
+	{
+		OwnerComp.GetBlackboardComponent()->SetValueAsEnum(AFPSAIController::kState, EBotState::FIRE);
+	}
+	else if (currentState & (1 << GetStateFlagShift(EBotStateFlag::MOVE)))
+	{
+		OwnerComp.GetBlackboardComponent()->SetValueAsEnum(AFPSAIController::kState, EBotState::MOVE);
+	}
+	else
+	{
+		OwnerComp.GetBlackboardComponent()->SetValueAsEnum(AFPSAIController::kState, EBotState::WAIT);
+	}
 }

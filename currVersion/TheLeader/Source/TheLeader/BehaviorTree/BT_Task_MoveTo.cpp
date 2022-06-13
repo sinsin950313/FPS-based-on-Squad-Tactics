@@ -15,7 +15,7 @@ EBTNodeResult::Type UBT_Task_MoveTo::ExecuteTask(UBehaviorTreeComponent& ownerCo
 	if (res == EBTNodeResult::Succeeded)
 	{
 		AFPSAIController* controller = Cast<AFPSAIController>(ownerComp.GetAIOwner());
-		controller->SetState(EBotState::WAIT);
+		controller->OffStateFlag(EBotStateFlag::MOVE);
 	}
 	return res;
 }

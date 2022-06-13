@@ -10,3 +10,8 @@ TheLeaderCommonData::TheLeaderCommonData()
 TheLeaderCommonData::~TheLeaderCommonData()
 {
 }
+
+int8 GetStateFlagShift(EBotStateFlag flag)
+{
+	return static_cast<int8>(flag);
+}

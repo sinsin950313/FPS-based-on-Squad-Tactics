@@ -26,11 +26,11 @@ void UBT_Service_IsReached::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* N
 	FVector position = controller->GetDestination();
 	if (_reachedRadius < Distance(current, position))
 	{
-		controller->SetState(EBotState::MOVE);
+		controller->SetStateFlag(EBotStateFlag::MOVE);
 	}
 	else
 	{
-		controller->SetState(EBotState::WAIT);
+		controller->OffStateFlag(EBotStateFlag::MOVE);
 	}
 }
 

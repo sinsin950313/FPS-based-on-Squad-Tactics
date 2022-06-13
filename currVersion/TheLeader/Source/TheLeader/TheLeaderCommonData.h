@@ -12,6 +12,14 @@ enum EBotState
 	FIRE UMETA(DisplayName = "FIRE")
 };
 
+enum class EBotStateFlag : int8
+{
+	MOVE,
+	ENGAGE
+};
+
+int8 GetStateFlagShift(EBotStateFlag flag);
+
 UENUM(BlueprintType)
 enum EBotFireAttitude
 {

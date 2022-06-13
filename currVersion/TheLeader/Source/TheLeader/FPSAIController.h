@@ -43,11 +43,17 @@ private:
 	UPROPERTY()
 	UBlackboardData* _BBAsset;
 
+//private:
+//	EBotState _currentState;
+//public:
+//	EBotState GetState();
+//	void SetState(EBotState state);
 private:
-	EBotState _currentState;
+	int32 _stateFlag;
 public:
-	EBotState GetState();
-	void SetState(EBotState state);
+	void SetStateFlag(EBotStateFlag flag);
+	void OffStateFlag(EBotStateFlag flag);
+	int32 GetStateFlag();
 
 public:
 	//void MoveToDestination(FVector destination);
@@ -82,7 +88,7 @@ public:
 	bool HasSpotted();
 private:
 	bool _isSpotting;
-	EBotState _beforeState;
+	//EBotState _beforeState;
 public:
 	void Spotting();
 	void NotSpotting();

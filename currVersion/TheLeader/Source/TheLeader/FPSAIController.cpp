@@ -68,25 +68,42 @@ void AFPSAIController::OnPossess(APawn* InPawn)
 		}
 	}
 }
-
-EBotState AFPSAIController::GetState()
-{
-	return _currentState;
-}
-
-void AFPSAIController::SetState(EBotState state)
-{
-	_currentState = state;
-}
+//
+//EBotState AFPSAIController::GetState()
+//{
+//	return _currentState;
+//}
+//
+//void AFPSAIController::SetState(EBotState state)
+//{
+//	_currentState = state;
+//}
 
 //void AFPSAIController::MoveToDestination(FVector destination)
 //{
 //	Blackboard->SetValueAsVector(kDestination, destination);
 //}
 
+void AFPSAIController::SetStateFlag(EBotStateFlag flag)
+{
+	_stateFlag |= (1 << GetStateFlagShift(flag));
+}
+
+void AFPSAIController::OffStateFlag(EBotStateFlag flag)
+{
+	int32 offFlag = 0xFFFFFFFF;
+	offFlag -= (1 << GetStateFlagShift(flag));
+	_stateFlag &= offFlag;
+}
+
+int32 AFPSAIController::GetStateFlag()
+{
+	return _stateFlag;
+}
+
 void AFPSAIController::LookAt(FVector that)
 {
-	SetState(EBotState::MOVE);
+	SetStateFlag(EBotStateFlag::MOVE);
 	Blackboard->SetValueAsVector(kLookAt, that);
 }
 
@@ -160,8 +177,7 @@ void AFPSAIController::Spotting()
 {
 	if (!_isSpotting)
 	{
-		_beforeState = _currentState;
-		_currentState = EBotState::FIRE;
+		SetStateFlag(EBotStateFlag::ENGAGE);
 		_isSpotting = true;
 	}
 }
@@ -170,7 +186,7 @@ void AFPSAIController::NotSpotting()
 {
 	if (_isSpotting)
 	{
-		_currentState = _beforeState;
+		OffStateFlag(EBotStateFlag::ENGAGE);
 		_isSpotting = false;
 	}
 }
