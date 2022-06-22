@@ -70,6 +70,23 @@ private:
 	const EPlayerMode _mode = EPlayerMode::FPSMODE;
 
 private:
-	//UPROPERTY(EditAnywhere)
-	//UAIPerceptionStimuliSourceComponent* _stimuliComponent;
+	float GetCurrentTime();
+private:
+	const int _maxMorale = 100;
+	const int _minMorale = 0;
+	int _morale = 100;
+	float _lastMoraleDamagedTime = 0.0f;
+	const float _moraleRecoveryStartInterval = 3.0f;
+	bool _bMoraleRecoveryStart = true;
+	float _lastMoraleRecoveryTime = 0.0f;
+	const int _moraleRecoveryValue = 10;
+	const float _moraleRecoveryInterval = 1.0f;
+public:
+	void MoraleAttack(APawn* attacker, int moraleDamage);
+	void MoraleRecoveryCheck();
+	void MoraleRecovery();
+
+private:
+	UPROPERTY(EditAnywhere)
+	bool _bShow = false;
 };

@@ -41,4 +41,9 @@ private:
 	FTimerHandle _countDownTimerHandler;
 	
 	void EndTime();
+
+private:
+	const int _moraleDamage = 10;
+public:
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor);
 };

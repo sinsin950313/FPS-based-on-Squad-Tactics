@@ -7,6 +7,7 @@
 #include "TheLeaderCommonData.h"
 #include "FPSAIController.h"
 #include "ProjectileActor.h"
+#include "Interface/InGameControllerInterface.h"
 
 // Sets default values
 AFPSPawn::AFPSPawn() : _mode(EPlayerMode::FPSMODE)
@@ -38,6 +39,18 @@ AFPSPawn::AFPSPawn() : _mode(EPlayerMode::FPSMODE)
 	//I think character has default sight
 	//_stimuliComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliComponent"));
 	//_stimuliComponent->RegisterForSense(UAISense_Sight::StaticClass());
+
+	UStaticMeshComponent* moraleArea = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Morale Area"));
+	moraleArea->SetVisibility(false);
+	moraleArea->SetWorldScale3D(FVector(3, 3, 3));
+	moraleArea->SetupAttachment(RootComponent);
+	AddOwnedComponent(moraleArea);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> moraleAreaMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+	if (moraleAreaMesh.Succeeded())
+	{
+		moraleArea->SetStaticMesh(moraleAreaMesh.Object);
+	}
+	moraleArea->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel5);
 }
 
 // Called when the game starts or when spawned
@@ -54,6 +67,15 @@ void AFPSPawn::Tick(float DeltaTime)
 	_lastAttackTime += DeltaTime;
 
 	Fire();
+
+	MoraleRecoveryCheck();
+
+	MoraleRecovery();
+ 
+	if (_bShow)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Morale : %d"), _morale);
+	}
 }
 
 // Called to bind functionality to input
@@ -215,4 +237,57 @@ float AFPSPawn::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, 
 	}
 
 	return finalDamage;
+}
+
+float AFPSPawn::GetCurrentTime()
+{
+	return GetWorld()->GetTimeSeconds();
+}
+
+void AFPSPawn::MoraleAttack(APawn* attacker, int moraleDamage)
+{
+	AFPSPawn* attackerPawn = Cast<AFPSPawn>(attacker);
+	IInGameControllerInterface* attackerController = Cast<IInGameControllerInterface>(attackerPawn->GetController());
+	if (attackerController == nullptr)
+	{
+		return;
+	}
+	IInGameControllerInterface* thisController = Cast<IInGameControllerInterface>(GetController());
+	if (thisController == nullptr)
+	{
+		return;
+	}
+
+	if (attackerController->GetGenericTeamId() != thisController->GetGenericTeamId())
+	{
+		_morale = ((_morale - moraleDamage) < _minMorale) ? _minMorale : (_morale - moraleDamage);
+		_lastMoraleDamagedTime = GetCurrentTime();
+		_bMoraleRecoveryStart = false;
+	}
+}
+
+void AFPSPawn::MoraleRecoveryCheck()
+{
+	if (_moraleRecoveryStartInterval < GetCurrentTime() - _lastMoraleDamagedTime)
+	{
+		_bMoraleRecoveryStart = true;
+	}
+}
+
+void AFPSPawn::MoraleRecovery()
+{
+	if (_bMoraleRecoveryStart)
+	{
+		float currentTime = GetCurrentTime();
+		if (_lastMoraleRecoveryTime + _moraleRecoveryInterval < currentTime)
+		{
+			_morale = (_morale + _moraleRecoveryValue < 100) ? (_morale + _moraleRecoveryValue) : _maxMorale;
+			_lastMoraleRecoveryTime = currentTime;
+		}
+
+		if (_morale == _maxMorale)
+		{
+			_bMoraleRecoveryStart = false;
+		}
+	}
 }

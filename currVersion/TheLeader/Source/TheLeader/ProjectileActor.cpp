@@ -3,6 +3,7 @@
 
 #include "ProjectileActor.h"
 #include "Components/SphereComponent.h" 
+#include "FPSPawn.h"
 
 // Sets default values
 AProjectileActor::AProjectileActor()
@@ -14,13 +15,13 @@ AProjectileActor::AProjectileActor()
 
 	USphereComponent* sphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Shpere Component"));
 	sphereComponent->SetCollisionProfileName(TEXT("Projectile"));
-	sphereComponent->SetNotifyRigidBodyCollision(true);
+	//sphereComponent->SetNotifyRigidBodyCollision(true);
 	sphereComponent->SetSphereRadius(0.1f);
 	RootComponent = sphereComponent;
 
 	_projectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
 	//_projectileMovementComponent->InitialSpeed = 10000;
-	_projectileMovementComponent->InitialSpeed = 100;
+	_projectileMovementComponent->InitialSpeed = 1000;
 	_projectileMovementComponent->UpdatedComponent = RootComponent;
 	AddOwnedComponent(_projectileMovementComponent);
 
@@ -33,6 +34,8 @@ AProjectileActor::AProjectileActor()
 		meshComponent->SetStaticMesh(ShpereMesh.Object);
 	}
 	meshComponent->SetWorldScale3D(FVector(0.1f, 0.1f, 0.1f));
+
+	bGenerateOverlapEventsDuringLevelStreaming = true;
 }
 
 // Called when the game starts or when spawned
@@ -65,3 +68,11 @@ void AProjectileActor::EndTime()
 	Destroy();
 }
 
+void AProjectileActor::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	AFPSPawn* pawn = Cast<AFPSPawn>(OtherActor);
+	if (pawn != nullptr)
+	{
+		pawn->MoraleAttack(GetInstigator(), _moraleDamage);
+	}
+}
