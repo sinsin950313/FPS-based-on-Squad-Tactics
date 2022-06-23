@@ -34,6 +34,8 @@ AFPSPawn::AFPSPawn() : _mode(EPlayerMode::FPSMODE)
 		meshComponent->SetStaticMesh(mesh.Object);
 	}
 
+	SetActorHiddenInGame(true);
+
 	_lastAttackTime = _coolTime;
 
 	//I think character has default sight
@@ -71,10 +73,10 @@ void AFPSPawn::Tick(float DeltaTime)
 	MoraleRecoveryCheck();
 
 	MoraleRecovery();
- 
+
 	if (_bShow)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Morale : %d"), _morale);
+		UE_LOG(LogTemp, Log, TEXT("%s"), IsHidden() ? TEXT("True") : TEXT("False"));
 	}
 }
 

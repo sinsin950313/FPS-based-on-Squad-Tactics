@@ -8,6 +8,7 @@ void SquadSharedData::Spotted(AFPSPawn* pawn)
 	if (!_spotted.Contains(pawn))
 	{
 		_spotted.Add(pawn, 0);
+		pawn->SetActorHiddenInGame(false);
 	}
 	int* ptr = _spotted.Find(pawn);
 	++(*ptr);
@@ -19,6 +20,7 @@ void SquadSharedData::Disapear(AFPSPawn* pawn)
 	--(*ptr);
 	if (*ptr == 0)
 	{
+		pawn->SetActorHiddenInGame(true);
 		_spotted.Remove(pawn);
 	}
 }

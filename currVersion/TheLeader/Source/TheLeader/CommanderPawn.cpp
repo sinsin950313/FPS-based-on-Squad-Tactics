@@ -63,6 +63,7 @@ void ACommanderPawn::CreateMember(FVector relativeLocation)
 	_positionPointers.Add(pointer);
 
 	AFPSPawn* member = GetWorld()->SpawnActor<AFPSPawn>(pointer->GetActorLocation(), GetActorRotation());
+	member->SetActorHiddenInGame(false);
 
 	AFPSAIController* controller = Cast<AFPSAIController>(member->GetController());
 	member->FireAttitudeDelegate.BindUFunction(controller, FName("SetFireAttitude"));
