@@ -55,3 +55,17 @@ void UAISensingUpdater::Sensing(AActor* Actor, FAIStimulus Stimulus)
 		}
 	}
 }
+
+void UAISensingUpdater::Run(APawn* myPawn)
+{
+	_myPawn = myPawn;
+	GetWorld()->GetTimerManager().SetTimer(_timerHandle, this, &UAISensingUpdater::Update, 1.0f, true);
+}
+
+void UAISensingUpdater::Update()
+{
+		UE_LOG(LogTemp, Log, TEXT("Update call"));
+	for (auto iter = _spotableList.CreateIterator(); ; ++iter)
+	{
+	}
+}

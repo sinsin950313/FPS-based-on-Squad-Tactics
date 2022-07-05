@@ -41,6 +41,8 @@ AFPSAIController::AFPSAIController()
 void AFPSAIController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	_sensingUpdater->Run(GetPawn());
 }
 
 void AFPSAIController::OnPossess(APawn* InPawn)

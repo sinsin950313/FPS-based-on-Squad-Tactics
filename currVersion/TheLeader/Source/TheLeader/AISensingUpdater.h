@@ -33,4 +33,14 @@ public:
 public:
 	UFUNCTION()
 	void Sensing(AActor* Actor, FAIStimulus Stimulus);
+
+private:
+	FTimerHandle _timerHandle;
+	APawn* _myPawn;
+	TSet<AFPSPawn> _spotableList;
+public:
+	void Run(APawn* myPawn);
+private:
+	UFUNCTION()
+	void Update();
 };
