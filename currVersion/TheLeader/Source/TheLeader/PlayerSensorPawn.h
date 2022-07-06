@@ -32,4 +32,7 @@ public:
 
 public:
 	void SetTeam(UGenericTeamAgent* teamAgent);
+
+public:
+	void RunSensingUpdater(AFPSPawn* pawn);
 };

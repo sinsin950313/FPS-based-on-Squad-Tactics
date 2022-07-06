@@ -84,5 +84,10 @@ void APlayerSensingAIController::SensingUpdate(AActor* Actor, FAIStimulus Stimul
 	//		DisappearEnemy(pawn);
 	//	}
 	//}
-	GetSensingUpdater()->Sensing(Actor, Stimulus);
+	//GetSensingUpdater()->Sensing(Actor, Stimulus);
+}
+
+void APlayerSensingAIController::RunSensingUpdater(AFPSPawn* pawn)
+{
+	GetSensingUpdater()->Run(pawn);
 }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "SquadSharedData.h"
+#include "FPSPawn.h"
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -18,6 +19,7 @@ class THELEADER_API UAISensingUpdater : public UObject
 
 public:
 	UAISensingUpdater();
+	~UAISensingUpdater();
 
 private:
 	UPROPERTY()
@@ -36,11 +38,15 @@ public:
 
 private:
 	FTimerHandle _timerHandle;
-	APawn* _myPawn;
-	TSet<AFPSPawn> _spotableList;
+	AFPSPawn* _myPawn;
+	TSet<AFPSPawn*> _spotableList;
 public:
-	void Run(APawn* myPawn);
+	void Run(AFPSPawn* myPawn);
 private:
 	UFUNCTION()
 	void Update();
+
+private:
+	void spotable(AFPSPawn* enemy);
+	void unspotable(AFPSPawn* enemy);
 };

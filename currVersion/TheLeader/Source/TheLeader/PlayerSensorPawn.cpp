@@ -46,3 +46,8 @@ void APlayerSensorPawn::SetTeam(UGenericTeamAgent* teamAgent)
 	APlayerSensingAIController* controller = Cast<APlayerSensingAIController>(GetController());
 	controller->SetTeam(teamAgent);
 }
+
+void APlayerSensorPawn::RunSensingUpdater(AFPSPawn* pawn)
+{
+	Cast<APlayerSensingAIController>(GetController())->RunSensingUpdater(pawn);
+}

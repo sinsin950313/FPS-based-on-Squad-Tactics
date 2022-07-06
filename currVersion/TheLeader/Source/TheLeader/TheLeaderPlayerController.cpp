@@ -94,6 +94,8 @@ void ATheLeaderPlayerController::OnPossess(APawn* InPawn)
 	{
 		_playerSensingPawn->AttachToActor(possessPawn, FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true));
 		_playerSensingPawn->SetSightConfig(possessPawn);
+
+		_playerSensingPawn->RunSensingUpdater(Cast<AFPSPawn>(InPawn));
 	}
 }
 

@@ -28,6 +28,7 @@ class THELEADER_API AFPSAIController : public AAIController, public IInGameContr
 	
 public:
 	AFPSAIController();
+	~AFPSAIController();
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 

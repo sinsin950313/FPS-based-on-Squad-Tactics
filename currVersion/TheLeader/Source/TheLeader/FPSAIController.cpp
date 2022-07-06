@@ -37,12 +37,15 @@ AFPSAIController::AFPSAIController()
 
 	_isSpotting = false;
 }
+AFPSAIController::~AFPSAIController()
+{
+
+}
 
 void AFPSAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_sensingUpdater->Run(GetPawn());
 }
 
 void AFPSAIController::OnPossess(APawn* InPawn)
@@ -69,6 +72,8 @@ void AFPSAIController::OnPossess(APawn* InPawn)
 			UE_LOG(LogTemp, Log, TEXT("AIController could't run BehaviorTree"));
 		}
 	}
+
+	_sensingUpdater->Run(Cast<AFPSPawn>(InPawn));
 }
 //
 //EBotState AFPSAIController::GetState()
@@ -237,7 +242,7 @@ void AFPSAIController::SensingUpdate(AActor* Actor, FAIStimulus Stimulus)
 	//		DisappearEnemy(pawn);
 	//	}
 	//}
-	GetSensingUpdater()->Sensing(Actor, Stimulus);
+	//GetSensingUpdater()->Sensing(Actor, Stimulus);
 }
 
 void AFPSAIController::SetPosition(APositionPointer* position)

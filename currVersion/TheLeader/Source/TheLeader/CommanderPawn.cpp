@@ -97,6 +97,7 @@ AFPSPawn* ACommanderPawn::GetLeader()
 		_currentLeader->FireAttitudeDelegate.BindUFunction(controller, FName("SetFireAttitude"));
 		_squadMembers.Remove(controller);
 		controller->Destroy();
+		GetWorld()->ForceGarbageCollection();
 
 		APositionPointer* temp = *_positionPointers.begin();
 		_positionPointers.Remove(temp);

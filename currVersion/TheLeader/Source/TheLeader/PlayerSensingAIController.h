@@ -55,4 +55,7 @@ public:
 
 public:
 	virtual void SensingUpdate(AActor* Actor, FAIStimulus Stimulus) override;
+
+public:
+	void RunSensingUpdater(AFPSPawn* pawn);
 };
