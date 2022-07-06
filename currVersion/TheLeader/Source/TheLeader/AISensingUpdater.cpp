@@ -65,7 +65,7 @@ void UAISensingUpdater::Run(APawn* myPawn)
 void UAISensingUpdater::Update()
 {
 		UE_LOG(LogTemp, Log, TEXT("Update call"));
-	for (auto iter = _spotableList.CreateIterator(); ; ++iter)
-	{
-	}
+	//for (auto iter = _spotableList.CreateIterator(); ; ++iter)
+	//{
+	//}
 }
